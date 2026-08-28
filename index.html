@@ -17,7 +17,7 @@
 <!-- Tipografías -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
 
 <link rel="stylesheet" href="./style.css" />
 </head>
@@ -33,35 +33,79 @@
 
 <!-- ===================== SPLASH SCREEN ===================== -->
 <section id="splash" class="screen">
-  <p class="eyebrow">Para</p>
-  <h1 class="wife-name">Daniela</h1>
-  <p class="tagline">Un pedacito nuestro, para cada día del año.</p>
-
-  <button id="open-gift" class="seal-button" aria-label="Abrir mi regalo">
-    <span class="seal-inner">
-      <span class="seal-heart">♥</span>
-    </span>
+  <span class="heart-mark" aria-hidden="true">♥</span>
+  <p class="tagline">Para el amor de mi vida</p>
+  <button id="open-gift" class="pill-button">
+    Te amo, <span id="wife-name-btn"></span>
   </button>
-
-  <p class="hint">Toca el sello para abrir</p>
+  <p class="hint">Toca para abrir</p>
 </section>
 
 <!-- ===================== PANTALLA DIARIA ===================== -->
-<section id="daily" class="screen" hidden>
-  <p class="day-label" id="day-label">Día 1</p>
+<section id="daily" class="screen daily-screen" hidden>
 
-  <div class="polaroid">
-    <div class="tape" aria-hidden="true"></div>
-    <div class="photo-frame">
-      <img id="day-photo" src="" alt="Foto del recuerdo del día" />
-    </div>
-    <p class="place-caption" id="day-place">Nuestro lugar favorito</p>
+  <!-- Fecha / momento del recuerdo -->
+  <p class="memory-date" id="memory-date"></p>
+
+  <!-- Carrusel de fotos -->
+  <div class="carousel-wrap">
+    <div class="carousel" id="carousel"></div>
+    <div class="dots" id="carousel-dots"></div>
   </div>
 
-  <p class="phrase" id="day-phrase">Cargando nuestra frase de hoy…</p>
+  <p class="couple-names" id="couple-names"></p>
+
+  <div class="squiggle" aria-hidden="true">〜</div>
+
+  <!-- Sobre sellado -->
+  <div id="envelope-wrap" class="envelope-wrap">
+    <div class="envelope">
+      <div class="envelope-flap"></div>
+    </div>
+    <button id="open-letter" class="seal-button" aria-label="Descubrir el mensaje del día">
+      <span class="seal-inner"><span class="seal-label">Descúbrelo</span></span>
+    </button>
+  </div>
+
+  <!-- Carta -->
+  <div id="letter-wrap" class="letter-wrap" hidden>
+    <p class="letter-text" id="letter-text"></p>
+    <p class="letter-question" id="letter-question"></p>
+    <button id="confirm-btn" class="pill-button"></button>
+  </div>
+
+  <!-- Tiempo juntos -->
+  <div id="final-wrap" class="final-wrap" hidden>
+    <div class="squiggle" aria-hidden="true">〜</div>
+
+    <div class="counter">
+      <div class="counter-item">
+        <span class="num" id="years-num">0</span>
+        <span class="label">años</span>
+      </div>
+      <div class="counter-item">
+        <span class="num" id="months-num">0</span>
+        <span class="label">meses</span>
+      </div>
+      <div class="counter-item">
+        <span class="num" id="days-num">0</span>
+        <span class="label">días</span>
+      </div>
+    </div>
+    <p class="counter-caption">de mi vida</p>
+
+    <div class="final-photo-frame">
+      <img id="final-photo" src="" alt="" />
+    </div>
+    <p class="final-message" id="final-message"></p>
+  </div>
 
   <p class="footer-note">Vuelve mañana — habrá algo nuevo esperándote.</p>
 </section>
+
+<!-- Música de fondo — coloca tu archivo en audio/cancion.mp3 -->
+<audio id="bg-music" src="./audio/cancion.mp3" loop preload="none"></audio>
+<button id="mute-toggle" class="mute-btn" hidden aria-label="Silenciar música">🔊</button>
 
 <script src="./app.js"></script>
 </body>

@@ -1,48 +1,74 @@
 # Para Daniela, con amor 💛
 
-App web estática (PWA) con una frase y foto distinta cada día, en un ciclo de 30 días.
+App web estática (PWA). Cada día, en un ciclo de 30 días, muestra:
+
+1. **Splash** — botón "Te amo, Daniela"
+2. **Carrusel de fotos** (2-3 por día, deslizable) + nombres de la pareja
+3. **Sobre sellado** — al tocarlo, se revela la carta del día
+4. **Carta + pregunta** — al confirmar, se revela el contador
+5. **Tiempo juntos** — años/meses/días calculados en automático desde tu aniversario, + foto de cierre + mensaje final
+
+Los días alternan uno a uno: los días pares (2, 4, 6...) giran en torno a Emi, los impares son de pareja (Nueva York, Papallacta, momentos en casa), y el día 30 cierra con un mensaje de familia completa.
 
 ## Archivos
-- `index.html` — estructura (splash + pantalla diaria)
+- `index.html` — estructura de las 2 pantallas (splash + pantalla diaria con sus 3 secciones)
 - `style.css` — diseño romántico, mobile-first
-- `app.js` — lógica de las 30 frases/fotos + registro del service worker
+- `app.js` — las 30 cartas, lógica del carrusel, del contador y del ciclo de 30 días
 - `manifest.json` — configuración PWA
 - `sw.js` — service worker (carga instantánea del cascarón)
 - `icons/` — íconos para "Añadir a pantalla de inicio"
 
-## 1. Antes de subirlo
-1. Abre `app.js`.
-2. Cambia `FECHA_INICIO` por la fecha en la que quieres que arranque el ciclo (por ejemplo, hoy o su cumpleaños). Formato `"AAAA-MM-DD"`.
-3. En el array `RECUERDOS`, reemplaza cada `imagen_url: "PEGA_AQUI_TU_URL_X"` con el link real de tu foto:
-   - Opción fácil: sube tus fotos a una carpeta `fotos/` dentro del proyecto (ej. `fotos/nyc-1.jpg`) y usa esa ruta relativa (`"fotos/nyc-1.jpg"`).
-   - También funciona un link público de Imgur, Google Photos, etc.
-4. Ajusta los textos `lugar` y `frase` a tu gusto — ya vienen con contenido de ejemplo sobre Nueva York, Papallacta y momentos de casa.
+## 1. Antes de subirlo — edita `app.js`
 
-## 2. Subir a GitHub
-```bash
-# Dentro de la carpeta del proyecto
-git init
-git add .
-git commit -m "Regalo para Daniela"
-git branch -M main
-git remote add origin https://github.com/TU_USUARIO/regalo-daniela.git
-git push -u origin main
-```
-(Crea antes el repositorio vacío en GitHub, sin README, para evitar conflictos al hacer push).
+Al principio del archivo hay 5 constantes para personalizar:
 
-## 3. Desplegar en Render
+| Constante | Qué es | Valor ya configurado |
+|---|---|---|
+| `NOMBRE_ESPOSA` | Nombre en el botón de inicio | `"Daniela"` |
+| `NOMBRES_PAREJA` | Firma bajo el carrusel de fotos | `"David & Daniela"` |
+| `NOMBRE_HIJO` | Cómo se le nombra en las cartas | `"Emi"` |
+| `FECHA_INICIO` | Día en que arranca el ciclo de 30 días | `"2026-08-06"` (de prueba — cámbiala antes de publicar) |
+| `FECHA_RELACION` | Aniversario, para que el contador sea exacto | `"2011-12-06"` |
+
+Ya dejé las primeras cuatro configuradas. Solo falta que cambies **`FECHA_INICIO`** por la fecha real en la que quieres que arranque el regalo antes de publicarlo (ahora mismo dice 6 de agosto, puesto solo para pruebas).
+
+Luego, en el array `RECUERDOS`, cada uno de los 30 días tiene:
+- `fecha_memoria`: el título sobre el carrusel (puedes dejar la descripción que ya tiene, o poner la fecha real de esa foto)
+- `fotos`: un array de 2 o 3 URLs — reemplaza cada `"PEGA_AQUI_TU_FOTO_D#_N"` con el link real de tu foto:
+  - Opción fácil: sube tus fotos a una carpeta `fotos/` dentro del proyecto (ej. `fotos/nyc-1.jpg`) y usa esa ruta relativa.
+  - También funciona un link público de Imgur, Google Photos, etc.
+- `carta`: el mensaje del día — ya viene escrito, pero puedes editarlo a tu gusto.
+
+La foto de cierre (la que acompaña al contador) reutiliza automáticamente la primera foto del carrusel de ese día — no necesitas subir una foto extra.
+
+## 2. Agregar la música
+
+1. Consigue el archivo de audio (mp3) de la canción — debe ser un archivo que ya tengas contigo (comprado, exportado de tu librería, etc.). No incluyo ningún archivo de música por temas de derechos de autor.
+2. Colócalo en la carpeta `audio/` del proyecto con el nombre exacto `cancion.mp3` (reemplaza el archivo `audio/LEEME.txt` de ejemplo).
+3. Si tu archivo se llama distinto o quieres otro formato, abre `index.html` y cambia la línea:
+   ```html
+   <audio id="bg-music" src="./audio/cancion.mp3" loop preload="none"></audio>
+   ```
+4. La canción empieza a sonar en cuanto ella toca el botón "Te amo, Daniela" en la pantalla de inicio — los celulares no permiten reproducir audio automáticamente sin que la persona toque algo primero, así que quedó enganchada justo a ese primer toque. Arriba a la derecha aparece un botón pequeño 🔊 para que ella pueda silenciarlo si quiere.
+
+## 3. Subir a GitHub (sin terminal)
+1. Entra a [github.com](https://github.com), crea un repositorio nuevo (ej. `regalo-daniela`), sin marcar la opción de README.
+2. En la página del repo, usa **Add file → Upload files** y arrastra todos los archivos y las carpetas `icons/` y `audio/` (con tu mp3 ya adentro).
+3. Escribe un mensaje de commit y confirma con **Commit changes**.
+
+## 4. Desplegar en Render
 1. Entra a [render.com](https://render.com) y en el Dashboard elige **New +** → **Static Site**.
-2. Conecta tu cuenta de GitHub y selecciona el repositorio `regalo-daniela`.
+2. Conecta tu cuenta de GitHub y selecciona el repositorio.
 3. En la configuración:
-   - **Build Command**: déjalo vacío (no hay build, es HTML/CSS/JS puro).
+   - **Build Command**: déjalo vacío.
    - **Publish directory**: `.` (la raíz del repo).
-4. Haz clic en **Create Static Site**. Render te dará una URL tipo `https://regalo-daniela.onrender.com`.
+4. Clic en **Create Static Site**. Render te dará una URL tipo `https://regalo-daniela.onrender.com`.
 
-## 4. Que Daniela lo instale en su celular
-1. Envíale el link de Render (por WhatsApp, por ejemplo).
-2. Al abrirlo en Chrome (Android) o Safari (iPhone), puede tocar el menú y elegir **"Añadir a pantalla de inicio"**.
-3. Quedará como un ícono con el corazón dorado, y al abrirlo se verá en pantalla completa, sin barra de navegador.
+## 5. Que Daniela lo instale en su celular
+1. Envíale el link por WhatsApp.
+2. En Chrome (Android) o Safari (iPhone), puede tocar el menú y elegir **"Añadir a pantalla de inicio"**.
+3. Quedará como un ícono con el corazón dorado, y se abrirá en pantalla completa.
 
 ## Notas
-- Como es un **Static Site** de Render (no un Web Service), normalmente no entra en modo "sleep" — pero la pantalla de bienvenida con el sello dorado igual cumple su función: da un momento bonito de anticipación antes de revelar el regalo, y gracias al service worker, ese cascarón carga instantáneo en visitas futuras.
-- El ciclo de frases se repite cada 30 días automáticamente — no necesitas hacer nada después de publicarlo.
+- El ciclo de 30 días se repite automáticamente — no necesitas hacer nada después de publicarlo.
+- El contador de "tiempo juntos" se recalcula solo, cada vez que ella lo abre, así que siempre estará al día.
