@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<title>Para Daniela, con amor</title>
+<meta name="description" content="Una carta de amor distinta cada día." />
+
+<!-- PWA -->
+<link rel="manifest" href="./manifest.json" />
+<meta name="theme-color" content="#7A2E38" />
+<link rel="apple-touch-icon" href="./icons/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Daniela ❤" />
+
+<!-- Tipografías -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<!-- Fondo ambiental -->
+<div class="ambient" aria-hidden="true">
+  <span class="petal p1">♥</span>
+  <span class="petal p2">♥</span>
+  <span class="petal p3">♥</span>
+  <span class="petal p4">♥</span>
+</div>
+
+<!-- ===================== SPLASH SCREEN ===================== -->
+<section id="splash" class="screen">
+  <p class="eyebrow">Para</p>
+  <h1 class="wife-name">Daniela</h1>
+  <p class="tagline">Un pedacito nuestro, para cada día del año.</p>
+
+  <button id="open-gift" class="seal-button" aria-label="Abrir mi regalo">
+    <span class="seal-inner">
+      <span class="seal-heart">♥</span>
+    </span>
+  </button>
+
+  <p class="hint">Toca el sello para abrir</p>
+</section>
+
+<!-- ===================== PANTALLA DIARIA ===================== -->
+<section id="daily" class="screen" hidden>
+  <p class="day-label" id="day-label">Día 1</p>
+
+  <div class="polaroid">
+    <div class="tape" aria-hidden="true"></div>
+    <div class="photo-frame">
+      <img id="day-photo" src="" alt="Foto del recuerdo del día" />
+    </div>
+    <p class="place-caption" id="day-place">Nuestro lugar favorito</p>
+  </div>
+
+  <p class="phrase" id="day-phrase">Cargando nuestra frase de hoy…</p>
+
+  <p class="footer-note">Vuelve mañana — habrá algo nuevo esperándote.</p>
+</section>
+
+<script src="./app.js"></script>
+</body>
+</html>

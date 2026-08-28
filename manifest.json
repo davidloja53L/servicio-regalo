@@ -1,0 +1,25 @@
+{
+  "name": "Para Daniela, con amor",
+  "short_name": "Daniela ❤",
+  "description": "Una carta de amor distinta cada día, para mi persona favorita.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FBF3E9",
+  "theme_color": "#7A2E38",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
