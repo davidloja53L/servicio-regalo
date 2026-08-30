@@ -50,7 +50,10 @@ button { font: inherit; }
    ===================================================== */
 .ambient {
   position: fixed;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
@@ -283,7 +286,10 @@ button { font: inherit; }
 
 .envelope-flap {
   position: absolute;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   background: linear-gradient(135deg, var(--gold-light) 0%, transparent 50%),
               linear-gradient(-135deg, var(--gold-light) 0%, transparent 50%);
   opacity: 0.55;
@@ -379,14 +385,49 @@ button { font: inherit; }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* La hoja de papel donde vive la carta, con pliegues en diagonal como
+   una carta doblada que se desdobla. */
+.letter-paper {
+  position: relative;
+  background: linear-gradient(160deg, #F8EEDF, #F0DFC5);
+  border: 1px solid rgba(201, 161, 92, 0.4);
+  border-radius: 14px;
+  padding: 34px 24px;
+  margin: 4px 0 26px;
+  box-shadow:
+    0 16px 34px rgba(74, 50, 41, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+}
+/* Las líneas de pliegue (como si la carta viniera doblada en 4) */
+.letter-paper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background:
+    linear-gradient(135deg,
+      transparent 0%, transparent 49.3%,
+      rgba(122, 46, 56, 0.12) 49.3%, rgba(122, 46, 56, 0.12) 50.7%,
+      transparent 50.7%, transparent 100%),
+    linear-gradient(45deg,
+      transparent 0%, transparent 49.3%,
+      rgba(122, 46, 56, 0.12) 49.3%, rgba(122, 46, 56, 0.12) 50.7%,
+      transparent 50.7%, transparent 100%);
+  pointer-events: none;
+}
+
 .letter-text {
+  position: relative;
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: clamp(17px, 4.6vw, 19px);
-  line-height: 1.65;
+  font-size: clamp(16px, 4.4vw, 18px);
+  line-height: 1.7;
   color: var(--ink);
-  max-width: 34ch;
-  margin: 4px auto 26px;
+  max-width: 30ch;
+  margin: 0 auto;
 }
 
 .letter-question {
@@ -513,6 +554,32 @@ button { font: inherit; }
   pointer-events: none;
   top: 0;
   left: 0;
+}
+
+/* ---------- Confeti de girasoles y corazones al abrir el sobre ---------- */
+.confetti-piece {
+  position: fixed;
+  font-size: 22px;
+  pointer-events: none;
+  z-index: 50;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  animation: confetti-burst 1s ease-out forwards;
+  will-change: transform, opacity;
+}
+@keyframes confetti-burst {
+  0% {
+    transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(0.5);
+    opacity: 1;
+  }
+  65% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(1);
+    opacity: 0;
+  }
 }
 
 .footer-note {

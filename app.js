@@ -327,14 +327,64 @@ function mostrarRegaloDeHoy() {
 document.getElementById("wife-name-btn").textContent = NOMBRE_ESPOSA;
 
 const muteToggle = document.getElementById("mute-toggle");
+let reproducirEnCuantoEsteListo = false;
 
+function intentarReproducirCancion() {
+  if (ytPlayer && ytPlayerListo && typeof ytPlayer.playVideo === "function") {
+    ytPlayer.playVideo();
+    muteToggle.hidden = false;
+  } else {
+    // El reproductor de YouTube aún no cargó (tarda un poco en llegar desde
+    // internet) — dejamos marcado que hay que reproducir en cuanto esté listo.
+    reproducirEnCuantoEsteListo = true;
+  }
+}
+
+// ---------- Confeti de girasoles y corazones ----------
+function lanzarConfeti(origenEl) {
+  const rect = origenEl.getBoundingClientRect();
+  const originX = rect.left + rect.width / 2;
+  const originY = rect.top + rect.height / 2;
+  const simbolos = ["🌻", "♥", "🌻", "♥"];
+  const cantidad = 16;
+
+  for (let i = 0; i < cantidad; i++) {
+    const pieza = document.createElement("span");
+    pieza.className = "confetti-piece";
+    pieza.textContent = simbolos[Math.floor(Math.random() * simbolos.length)];
+    pieza.setAttribute("aria-hidden", "true");
+
+    const angulo = Math.random() * Math.PI * 2;
+    const distancia = 70 + Math.random() * 110;
+    const tx = Math.cos(angulo) * distancia;
+    const ty = Math.sin(angulo) * distancia - 50; // sesgo hacia arriba
+    const rot = Math.round(Math.random() * 260 - 130) + "deg";
+
+    pieza.style.left = originX + "px";
+    pieza.style.top = originY + "px";
+    pieza.style.setProperty("--tx", tx + "px");
+    pieza.style.setProperty("--ty", ty + "px");
+    pieza.style.setProperty("--rot", rot);
+
+    document.body.appendChild(pieza);
+    setTimeout(() => pieza.remove(), 1050);
+  }
+}
+
+// ---------- Primer botón: abre el regalo + arranca la canción ----------
 document.getElementById("open-gift").addEventListener("click", (e) => {
+  // El intento de reproducir se hace aquí, en el primer toque del usuario,
+  // que es el único momento en que el navegador garantiza permitir sonido.
+  intentarReproducirCancion();
+
   e.currentTarget.classList.add("breaking");
   setTimeout(mostrarRegaloDeHoy, 350);
 });
 
-// ---------- Apertura animada del sobre ----------
+// ---------- Apertura animada del sobre + confeti ----------
 document.getElementById("open-letter").addEventListener("click", (e) => {
+  lanzarConfeti(e.currentTarget);
+
   e.currentTarget.classList.add("breaking"); // el sello se encoge y desaparece
   const envelopeWrap = document.getElementById("envelope-wrap");
   const letterWrap = document.getElementById("letter-wrap");
@@ -353,21 +403,13 @@ document.getElementById("open-letter").addEventListener("click", (e) => {
   }, 680);
 });
 
-// ---------- Confirmar carta → revelar contador + reproducir canción ----------
+// ---------- Confirmar carta → revelar el contador ----------
 document.getElementById("confirm-btn").addEventListener("click", () => {
   const finalWrap = document.getElementById("final-wrap");
   finalWrap.hidden = false;
   setTimeout(() => {
     finalWrap.scrollIntoView({ behavior: "smooth", block: "start" });
   }, 50);
-
-  // El play() se llama aquí mismo, dentro del gesto del usuario (el toque
-  // en el botón). Si se llamara después, en un setTimeout, Safari/iOS
-  // bloquearía el sonido.
-  if (ytPlayer && ytPlayerListo && typeof ytPlayer.playVideo === "function") {
-    ytPlayer.playVideo();
-    muteToggle.hidden = false;
-  }
 });
 
 muteToggle.addEventListener("click", () => {
@@ -400,7 +442,14 @@ window.onYouTubeIframeAPIReady = function () {
     videoId: YOUTUBE_VIDEO_ID,
     playerVars: { autoplay: 0, controls: 0, playsinline: 1 },
     events: {
-      onReady: () => { ytPlayerListo = true; }
+      onReady: () => {
+        ytPlayerListo = true;
+        // Si ella ya había tocado el primer botón antes de que esto
+        // terminara de cargar, reproducimos apenas esté listo.
+        if (reproducirEnCuantoEsteListo) {
+          intentarReproducirCancion();
+        }
+      }
     }
   });
 };
