@@ -264,6 +264,7 @@ function construirCarrusel(fotos, lugar) {
     img.src = url;
     img.alt = `${lugar} — foto ${i + 1}`;
     img.loading = i === 0 ? "eager" : "lazy";
+    img.addEventListener("click", () => abrirLightbox(url, img.alt));
     slide.appendChild(img);
     carousel.appendChild(slide);
 
@@ -284,6 +285,53 @@ function construirCarrusel(fotos, lugar) {
     });
   });
 }
+
+/* =====================================================
+   Lightbox — ver cualquier foto en grande, con zoom al tocar
+   ===================================================== */
+const lightboxEl = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+
+function abrirLightbox(src, alt) {
+  lightboxImg.src = src;
+  lightboxImg.alt = alt || "";
+  lightboxImg.classList.remove("zoomed");
+  lightboxImg.style.transform = "";
+  lightboxEl.hidden = false;
+}
+
+function cerrarLightbox() {
+  lightboxEl.hidden = true;
+  lightboxImg.classList.remove("zoomed");
+  lightboxImg.style.transform = "";
+}
+
+document.getElementById("lightbox-close").addEventListener("click", cerrarLightbox);
+
+// Tocar el fondo oscuro (no la foto) también cierra
+lightboxEl.addEventListener("click", (e) => {
+  if (e.target === lightboxEl) cerrarLightbox();
+});
+
+// Tocar la foto alterna entre normal y acercada, centrando el zoom
+// justo en el punto donde se tocó.
+lightboxImg.addEventListener("click", (e) => {
+  if (lightboxImg.classList.contains("zoomed")) {
+    lightboxImg.classList.remove("zoomed");
+    lightboxImg.style.transform = "";
+    return;
+  }
+  const rect = lightboxImg.getBoundingClientRect();
+  const origenX = ((e.clientX - rect.left) / rect.width) * 100;
+  const origenY = ((e.clientY - rect.top) / rect.height) * 100;
+  lightboxImg.style.transformOrigin = origenX + "% " + origenY + "%";
+  lightboxImg.style.transform = "scale(2.2)";
+  lightboxImg.classList.add("zoomed");
+});
+
+document.getElementById("final-photo").addEventListener("click", (e) => {
+  if (e.target.src) abrirLightbox(e.target.src, e.target.alt);
+});
 
 /* =====================================================
    Construir la pantalla del día
@@ -411,6 +459,49 @@ document.getElementById("confirm-btn").addEventListener("click", () => {
     finalWrap.scrollIntoView({ behavior: "smooth", block: "start" });
   }, 50);
 });
+
+// ---------- "Verlo de nuevo" → vuelve al splash sin recargar la página ----------
+function reiniciarRegalo() {
+  const splash = document.getElementById("splash");
+  const daily = document.getElementById("daily");
+  const envelopeWrap = document.getElementById("envelope-wrap");
+  const letterWrap = document.getElementById("letter-wrap");
+  const finalWrap = document.getElementById("final-wrap");
+  const sealBtn = document.getElementById("open-letter");
+  const carousel = document.getElementById("carousel");
+
+  // Pantalla diaria → oculta, splash → visible otra vez
+  daily.hidden = true;
+  daily.classList.remove("reveal");
+  splash.hidden = false;
+  splash.classList.remove("hiding");
+
+  // Sobre, carta y contador vuelven a su estado inicial
+  envelopeWrap.hidden = false;
+  envelopeWrap.classList.remove("opening", "opened");
+  sealBtn.classList.remove("breaking");
+  letterWrap.hidden = true;
+  letterWrap.classList.remove("emerge");
+  finalWrap.hidden = true;
+
+  // El carrusel vuelve a la primera foto
+  carousel.scrollLeft = 0;
+  document.querySelectorAll("#carousel-dots .dot").forEach((d, i) => {
+    d.classList.toggle("active", i === 0);
+  });
+
+  // La canción vuelve al inicio, lista para sonar de nuevo con el primer botón
+  if (ytPlayer && typeof ytPlayer.pauseVideo === "function") {
+    ytPlayer.pauseVideo();
+    if (typeof ytPlayer.seekTo === "function") ytPlayer.seekTo(0, true);
+  }
+  muteToggle.hidden = true;
+  reproducirEnCuantoEsteListo = false;
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.getElementById("restart-btn").addEventListener("click", reiniciarRegalo);
 
 muteToggle.addEventListener("click", () => {
   if (!ytPlayer) return;

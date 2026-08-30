@@ -82,6 +82,8 @@
   <div id="final-wrap" class="final-wrap" hidden>
     <div class="squiggle" aria-hidden="true">〜</div>
 
+    <p class="counter-caption counter-heading">Han sido los mejores</p>
+
     <div class="counter">
       <div class="counter-item">
         <span class="num" id="years-num">0</span>
@@ -104,10 +106,18 @@
       </div>
     </div>
     <p class="final-message" id="final-message"></p>
+
+    <button id="restart-btn" class="pill-button outline restart-btn">Verlo de nuevo ♥</button>
   </div>
 
   <p class="footer-note">Vuelve mañana — habrá algo nuevo esperándote.</p>
 </section>
+
+<!-- Lightbox para ver las fotos en grande -->
+<div id="lightbox" class="lightbox" hidden>
+  <button id="lightbox-close" class="lightbox-close" aria-label="Cerrar foto">✕</button>
+  <img id="lightbox-img" src="" alt="" />
+</div>
 
 <!-- Reproductor de YouTube, oculto — solo se usa el audio -->
 <div id="yt-player-slot"></div>
