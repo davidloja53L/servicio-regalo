@@ -2,9 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Para Daniela, con amor</title>
 <meta name="description" content="Una carta de amor distinta cada día." />
+<meta name="color-scheme" content="light only" />
 
 <!-- PWA -->
 <link rel="manifest" href="./manifest.json" />
@@ -17,54 +18,63 @@
 <!-- Tipografías -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet" />
 
 <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
 
-<!-- Fondo ambiental -->
+<!-- Corazones flotando de fondo -->
 <div class="ambient" aria-hidden="true">
   <span class="petal p1">♥</span>
   <span class="petal p2">♥</span>
   <span class="petal p3">♥</span>
   <span class="petal p4">♥</span>
+  <span class="petal p5">♥</span>
 </div>
 
-<!-- ===================== SPLASH SCREEN ===================== -->
-<section id="splash" class="screen">
-  <span class="heart-mark" aria-hidden="true">♥</span>
-  <p class="tagline">Para el amor de mi vida</p>
-  <button id="open-gift" class="pill-button">
-    Te amo, <span id="wife-name-btn"></span>
-  </button>
-  <p class="hint">Toca para abrir</p>
+<!-- ===================== PANTALLA DE INICIO ===================== -->
+<section id="splash" class="screen splash">
+  <div class="splash-inner">
+    <span class="heart-mark reveal-1" aria-hidden="true">♥</span>
+    <p class="tagline reveal-2">Para el amor de mi vida</p>
+    <button id="open-gift" class="pill-button reveal-3">
+      Te amo, <span id="wife-name-btn"></span>
+    </button>
+    <p class="hint reveal-4">Toca para abrir</p>
+  </div>
 </section>
 
-<!-- ===================== PANTALLA DIARIA ===================== -->
+<!-- ===================== PANTALLA DEL DÍA ===================== -->
 <section id="daily" class="screen daily-screen" hidden>
 
-  <!-- Fecha / momento del recuerdo -->
   <p class="memory-date" id="memory-date"></p>
 
   <!-- Carrusel de fotos -->
   <div class="carousel-wrap">
     <div class="carousel-frame">
-      <div class="carousel" id="carousel"></div>
+      <div class="carousel" id="carousel" role="group" aria-label="Fotos del recuerdo de hoy"></div>
+      <button class="carousel-nav prev" id="carousel-prev" type="button" aria-label="Foto anterior" hidden>‹</button>
+      <button class="carousel-nav next" id="carousel-next" type="button" aria-label="Foto siguiente" hidden>›</button>
     </div>
     <div class="dots" id="carousel-dots"></div>
   </div>
 
   <p class="couple-names" id="couple-names"></p>
 
-  <div class="squiggle" aria-hidden="true">〜</div>
+  <div class="ornament" aria-hidden="true">
+    <span class="ornament-line"></span>
+    <span class="ornament-heart">♥</span>
+    <span class="ornament-line"></span>
+  </div>
 
   <!-- Sobre sellado -->
   <div id="envelope-wrap" class="envelope-wrap">
-    <div class="envelope">
+    <div class="envelope" aria-hidden="true">
+      <div class="envelope-body"></div>
       <div class="envelope-flap"></div>
     </div>
-    <button id="open-letter" class="seal-button" aria-label="Descubrir el mensaje del día">
+    <button id="open-letter" class="seal-button" type="button" aria-label="Abrir la carta de hoy">
       <span class="seal-inner"><span class="seal-label">Descúbrelo</span></span>
     </button>
   </div>
@@ -72,27 +82,34 @@
   <!-- Carta -->
   <div id="letter-wrap" class="letter-wrap" hidden>
     <div class="letter-paper">
+      <span class="letter-flourish" aria-hidden="true">❦</span>
       <p class="letter-text" id="letter-text"></p>
     </div>
     <p class="letter-question" id="letter-question"></p>
-    <button id="confirm-btn" class="pill-button"></button>
+    <button id="confirm-btn" class="pill-button" type="button"></button>
   </div>
 
   <!-- Tiempo juntos -->
   <div id="final-wrap" class="final-wrap" hidden>
-    <div class="squiggle" aria-hidden="true">〜</div>
+    <div class="ornament" aria-hidden="true">
+      <span class="ornament-line"></span>
+      <span class="ornament-heart">♥</span>
+      <span class="ornament-line"></span>
+    </div>
 
-    <p class="counter-caption counter-heading">Han sido los mejores</p>
+    <p class="counter-heading">Han sido los mejores</p>
 
     <div class="counter">
       <div class="counter-item">
         <span class="num" id="years-num">0</span>
         <span class="label">años</span>
       </div>
+      <span class="counter-sep" aria-hidden="true">·</span>
       <div class="counter-item">
         <span class="num" id="months-num">0</span>
         <span class="label">meses</span>
       </div>
+      <span class="counter-sep" aria-hidden="true">·</span>
       <div class="counter-item">
         <span class="num" id="days-num">0</span>
         <span class="label">días</span>
@@ -105,23 +122,31 @@
         <img id="final-photo" src="" alt="" />
       </div>
     </div>
+
     <p class="final-message" id="final-message"></p>
 
-    <button id="restart-btn" class="pill-button outline restart-btn">Verlo de nuevo ♥</button>
+    <button id="restart-btn" class="pill-button outline restart-btn" type="button">Verlo de nuevo ♥</button>
   </div>
 
   <p class="footer-note">Vuelve mañana — habrá algo nuevo esperándote.</p>
 </section>
 
-<!-- Lightbox para ver las fotos en grande -->
-<div id="lightbox" class="lightbox" hidden>
-  <button id="lightbox-close" class="lightbox-close" aria-label="Cerrar foto">✕</button>
-  <img id="lightbox-img" src="" alt="" />
+<!-- ===================== VISOR DE FOTOS ===================== -->
+<div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada">
+  <button id="lightbox-close" class="lightbox-close" type="button" aria-label="Cerrar foto">✕</button>
+  <button id="lightbox-prev" class="lightbox-nav prev" type="button" aria-label="Foto anterior">‹</button>
+  <button id="lightbox-next" class="lightbox-nav next" type="button" aria-label="Foto siguiente">›</button>
+  <div class="lightbox-stage">
+    <img id="lightbox-img" src="" alt="" />
+  </div>
+  <p class="lightbox-hint" id="lightbox-hint">Toca la foto para acercar</p>
 </div>
 
-<!-- Reproductor de YouTube, oculto — solo se usa el audio -->
-<div id="yt-player-slot"></div>
-<button id="mute-toggle" class="mute-btn" hidden aria-label="Silenciar música">🔊</button>
+<!-- Reproductor de YouTube oculto (solo audio) -->
+<div id="yt-player-slot" aria-hidden="true"></div>
+<button id="mute-toggle" class="mute-btn" hidden type="button" aria-label="Silenciar música">
+  <span id="mute-icon">🔊</span>
+</button>
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script src="./app.js"></script>

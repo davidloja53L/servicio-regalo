@@ -6,17 +6,26 @@ App web estática (PWA). Cada día, durante 3 meses (90 días), muestra:
 2. **Carrusel de fotos** (2-3 por día, deslizable, con zoom al tocarlas) en un marco romántico, + nombres de la pareja
 3. **Sobre sellado** — al tocarlo, salta un confeti de girasoles y corazones, la solapa se abre de verdad y la carta emerge desde adentro, escrita sobre una hoja de papel con pliegues
 4. **Carta + pregunta** — al confirmar, se revela el contador
-5. **Tiempo juntos** — "Han sido los mejores" + años/meses/días calculados en automático desde tu aniversario + "de mi vida", foto de cierre (con zoom), mensaje final, y un botón "Verlo de nuevo" para repetir todo sin recargar la página
+5. **Tiempo juntos** — "Han sido los mejores" + años/meses/días que suben animados hasta la cifra real, calculada en automático desde tu aniversario + "de mi vida", foto de cierre (con zoom), mensaje final, y un botón "Verlo de nuevo" para repetir todo sin recargar la página
+
+Detalles: las fotos se pueden ampliar tocándolas (con flechas, deslizar el dedo y tecla Escape para cerrar), el carrusel tiene flechas y puntos, y todo respeta la opción "reducir movimiento" del teléfono para quien la tenga activada.
 
 Hay **45 días únicos** de contenido (22 de pareja, 22 de Emi/familia, 1 de cierre especial), y se reparten en un **orden fijo pero barajado** a lo largo de los 90 días — cada uno se repite exactamente 2 veces en el trimestre, nunca dos veces seguidas, y el orden ya está definido así que siempre se ve igual (no cambia cada vez que ella abre la página, solo según qué día del calendario sea).
 
 ## Archivos
-- `index.html` — estructura de las 2 pantallas (splash + pantalla diaria con sus secciones)
+- `index.html` — estructura de las pantallas
 - `style.css` — diseño romántico, mobile-first
-- `app.js` — las 45 cartas, el orden barajado de 90 días, lógica del carrusel, el contador y el lightbox
+- `app.js` — las 45 cartas, el orden barajado de 90 días, carrusel, contador y visor de fotos
 - `manifest.json` — configuración PWA
-- `sw.js` — service worker (carga instantánea del cascarón)
+- `sw.js` — service worker (carga instantánea + las fotos ya vistas quedan disponibles sin señal)
 - `icons/` — íconos para "Añadir a pantalla de inicio"
+- `fotos/` — las 85 fotos en versión ligera (para el carrusel)
+- `fotos/full/` — las mismas fotos en versión grande (solo se descargan al hacer zoom)
+
+### Sobre las fotos
+Cada foto está guardada en dos tamaños. El sitio muestra la ligera (~89 KB) y solo
+descarga la grande cuando ella toca una foto para ampliarla. Por eso abre rápido
+incluso con señal regular. **Sube las dos carpetas** (`fotos/` y `fotos/full/`).
 
 ## 1. Antes de subirlo — edita `app.js`
 

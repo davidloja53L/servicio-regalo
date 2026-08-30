@@ -323,132 +323,327 @@ function calcularTiempoJuntos(fechaInicioStr) {
 }
 
 /* =====================================================
-   Carrusel
+   Ayudas para imágenes
+   -----------------------------------------------------
+   Cada foto existe en dos tamaños:
+     fotos/diaXX_N.jpg        → ligera, para el carrusel
+     fotos/full/diaXX_N.jpg   → grande, solo al hacer zoom
+   Así la app carga rápido y la foto ampliada se ve nítida.
    ===================================================== */
-function construirCarrusel(fotos, lugar) {
-  const carousel = document.getElementById("carousel");
-  const dotsWrap = document.getElementById("carousel-dots");
-  carousel.innerHTML = "";
-  dotsWrap.innerHTML = "";
+function versionGrande(ruta) {
+  if (ruta.indexOf("fotos/") !== 0) return ruta;
+  return ruta.replace("fotos/", "fotos/full/");
+}
 
-  fotos.forEach((url, i) => {
-    const slide = document.createElement("div");
-    slide.className = "carousel-slide";
-    const img = document.createElement("img");
-    img.src = url;
-    img.alt = `${lugar} — foto ${i + 1}`;
-    img.loading = i === 0 ? "eager" : "lazy";
-    img.addEventListener("click", () => abrirLightbox(url, img.alt));
-    slide.appendChild(img);
-    carousel.appendChild(slide);
-
-    const dot = document.createElement("span");
-    dot.className = "dot" + (i === 0 ? " active" : "");
-    dotsWrap.appendChild(dot);
-  });
-
-  const dots = dotsWrap.querySelectorAll(".dot");
-  let ticking = false;
-  carousel.addEventListener("scroll", () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const idx = Math.round(carousel.scrollLeft / carousel.clientWidth);
-      dots.forEach((d, i) => d.classList.toggle("active", i === idx));
-      ticking = false;
-    });
-  });
+// Muestra la imagen con un fundido suave en cuanto termina de cargar,
+// y quita el efecto de "cargando" del contenedor.
+function alCargarImagen(img, contenedor) {
+  function marcarLista() {
+    img.classList.add("loaded");
+    if (contenedor) contenedor.classList.add("loaded");
+  }
+  if (img.complete && img.naturalWidth > 0) {
+    marcarLista();
+  } else {
+    img.addEventListener("load", marcarLista, { once: true });
+    img.addEventListener("error", marcarLista, { once: true });
+  }
 }
 
 /* =====================================================
-   Lightbox — ver cualquier foto en grande, con zoom al tocar
+   Carrusel de fotos del día
+   ===================================================== */
+let fotosDelDia = [];      // rutas ligeras
+let tituloDelDia = "";
+
+function construirCarrusel(fotos, lugar) {
+  const carousel = document.getElementById("carousel");
+  const dotsWrap = document.getElementById("carousel-dots");
+  const btnPrev = document.getElementById("carousel-prev");
+  const btnNext = document.getElementById("carousel-next");
+
+  carousel.innerHTML = "";
+  dotsWrap.innerHTML = "";
+  fotosDelDia = fotos.slice();
+  tituloDelDia = lugar;
+
+  fotos.forEach(function (url, i) {
+    const slide = document.createElement("div");
+    slide.className = "carousel-slide";
+
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = lugar + " — foto " + (i + 1) + " de " + fotos.length;
+    img.loading = i === 0 ? "eager" : "lazy";
+    img.decoding = "async";
+    img.draggable = false;
+    img.addEventListener("click", function () {
+      abrirLightbox(i);
+    });
+
+    alCargarImagen(img, slide);
+    slide.appendChild(img);
+    carousel.appendChild(slide);
+
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "dot" + (i === 0 ? " active" : "");
+    dot.setAttribute("aria-label", "Ver foto " + (i + 1));
+    dot.addEventListener("click", function () {
+      irASlide(i);
+    });
+    dotsWrap.appendChild(dot);
+  });
+
+  // Las flechas solo tienen sentido si hay más de una foto
+  const varias = fotos.length > 1;
+  btnPrev.hidden = !varias;
+  btnNext.hidden = !varias;
+  dotsWrap.style.display = varias ? "" : "none";
+
+  actualizarPuntos(0);
+}
+
+function slideActual() {
+  const carousel = document.getElementById("carousel");
+  if (!carousel.clientWidth) return 0;
+  return Math.round(carousel.scrollLeft / carousel.clientWidth);
+}
+
+function irASlide(indice) {
+  const carousel = document.getElementById("carousel");
+  const total = fotosDelDia.length;
+  if (!total) return;
+  const destino = Math.max(0, Math.min(indice, total - 1));
+  carousel.scrollTo({ left: destino * carousel.clientWidth, behavior: "smooth" });
+  actualizarPuntos(destino);
+}
+
+function actualizarPuntos(indice) {
+  // Bucle clásico en vez de NodeList.forEach: funciona en todos los navegadores
+  const puntos = document.querySelectorAll("#carousel-dots .dot");
+  for (let i = 0; i < puntos.length; i++) {
+    puntos[i].classList.toggle("active", i === indice);
+  }
+}
+
+// Un solo listener de scroll para todo el ciclo de vida de la app
+(function conectarCarrusel() {
+  const carousel = document.getElementById("carousel");
+  let esperando = false;
+
+  carousel.addEventListener("scroll", function () {
+    if (esperando) return;
+    esperando = true;
+    requestAnimationFrame(function () {
+      actualizarPuntos(slideActual());
+      esperando = false;
+    });
+  });
+
+  document.getElementById("carousel-prev").addEventListener("click", function () {
+    irASlide(slideActual() - 1);
+  });
+  document.getElementById("carousel-next").addEventListener("click", function () {
+    irASlide(slideActual() + 1);
+  });
+})();
+
+/* =====================================================
+   Visor de fotos (lightbox)
    ===================================================== */
 const lightboxEl = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
+const lightboxHint = document.getElementById("lightbox-hint");
+const lbPrev = document.getElementById("lightbox-prev");
+const lbNext = document.getElementById("lightbox-next");
 
-function abrirLightbox(src, alt) {
-  lightboxImg.src = src;
-  lightboxImg.alt = alt || "";
-  lightboxImg.classList.remove("zoomed");
-  lightboxImg.style.transform = "";
+let indiceLightbox = 0;
+let listaLightbox = [];   // rutas ligeras que se están visitando
+let ultimoFoco = null;
+
+function abrirLightbox(indice, lista, alt) {
+  listaLightbox = lista || fotosDelDia;
+  if (!listaLightbox.length) return;
+
+  indiceLightbox = Math.max(0, Math.min(indice, listaLightbox.length - 1));
+  ultimoFoco = document.activeElement;
+
+  cargarFotoLightbox(alt);
+
+  const varias = listaLightbox.length > 1;
+  lbPrev.hidden = !varias;
+  lbNext.hidden = !varias;
+
   lightboxEl.hidden = false;
+  document.body.classList.add("lightbox-open");
+  lightboxHint.hidden = false;
+  document.getElementById("lightbox-close").focus();
+}
+
+function cargarFotoLightbox(alt) {
+  const ligera = listaLightbox[indiceLightbox];
+  quitarZoom();
+
+  // Muestra primero la versión ligera (ya está en caché, aparece al instante)
+  // y la cambia por la grande en cuanto termina de descargarse.
+  lightboxImg.src = ligera;
+  lightboxImg.alt = alt || (tituloDelDia + " — foto " + (indiceLightbox + 1));
+
+  const grande = new Image();
+  const rutaGrande = versionGrande(ligera);
+  grande.onload = function () {
+    if (listaLightbox[indiceLightbox] === ligera) {
+      lightboxImg.src = rutaGrande;
+    }
+  };
+  grande.src = rutaGrande;
 }
 
 function cerrarLightbox() {
   lightboxEl.hidden = true;
+  document.body.classList.remove("lightbox-open");
+  quitarZoom();
+  if (ultimoFoco && typeof ultimoFoco.focus === "function") ultimoFoco.focus();
+}
+
+function moverLightbox(paso) {
+  if (listaLightbox.length < 2) return;
+  indiceLightbox = (indiceLightbox + paso + listaLightbox.length) % listaLightbox.length;
+  cargarFotoLightbox();
+}
+
+function quitarZoom() {
   lightboxImg.classList.remove("zoomed");
   lightboxImg.style.transform = "";
+  lightboxImg.style.transformOrigin = "";
 }
 
 document.getElementById("lightbox-close").addEventListener("click", cerrarLightbox);
+lbPrev.addEventListener("click", function () { moverLightbox(-1); });
+lbNext.addEventListener("click", function () { moverLightbox(1); });
 
-// Tocar el fondo oscuro (no la foto) también cierra
-lightboxEl.addEventListener("click", (e) => {
-  if (e.target === lightboxEl) cerrarLightbox();
+// Tocar el fondo oscuro cierra el visor
+lightboxEl.addEventListener("click", function (e) {
+  if (e.target === lightboxEl || e.target.classList.contains("lightbox-stage")) {
+    cerrarLightbox();
+  }
 });
 
-// Tocar la foto alterna entre normal y acercada, centrando el zoom
-// justo en el punto donde se tocó.
-lightboxImg.addEventListener("click", (e) => {
+// Tocar la foto alterna el zoom, centrado justo donde se tocó
+lightboxImg.addEventListener("click", function (e) {
   if (lightboxImg.classList.contains("zoomed")) {
-    lightboxImg.classList.remove("zoomed");
-    lightboxImg.style.transform = "";
+    quitarZoom();
+    lightboxHint.hidden = false;
     return;
   }
   const rect = lightboxImg.getBoundingClientRect();
   const origenX = ((e.clientX - rect.left) / rect.width) * 100;
   const origenY = ((e.clientY - rect.top) / rect.height) * 100;
   lightboxImg.style.transformOrigin = origenX + "% " + origenY + "%";
-  lightboxImg.style.transform = "scale(2.2)";
+  lightboxImg.style.transform = "scale(2.3)";
   lightboxImg.classList.add("zoomed");
+  lightboxHint.hidden = true;
 });
 
-document.getElementById("final-photo").addEventListener("click", (e) => {
-  if (e.target.src) abrirLightbox(e.target.src, e.target.alt);
+// Teclado: Escape cierra, flechas navegan
+document.addEventListener("keydown", function (e) {
+  if (lightboxEl.hidden) return;
+  if (e.key === "Escape") cerrarLightbox();
+  else if (e.key === "ArrowLeft") moverLightbox(-1);
+  else if (e.key === "ArrowRight") moverLightbox(1);
 });
+
+// Deslizar el dedo para cambiar de foto (solo si no está acercada)
+(function gestosLightbox() {
+  let inicioX = 0;
+  let inicioY = 0;
+
+  lightboxEl.addEventListener("touchstart", function (e) {
+    if (e.touches.length !== 1) return;
+    inicioX = e.touches[0].clientX;
+    inicioY = e.touches[0].clientY;
+  }, { passive: true });
+
+  lightboxEl.addEventListener("touchend", function (e) {
+    if (lightboxImg.classList.contains("zoomed")) return;
+    if (!e.changedTouches.length) return;
+    const dx = e.changedTouches[0].clientX - inicioX;
+    const dy = e.changedTouches[0].clientY - inicioY;
+    // Solo cuenta como deslizar si el gesto fue claramente horizontal
+    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.6) {
+      moverLightbox(dx < 0 ? 1 : -1);
+    }
+  }, { passive: true });
+})();
+
+/* =====================================================
+   Contador animado de tiempo juntos
+   ===================================================== */
+function animarNumero(elemento, destino, duracion) {
+  const prefiereQuieto = window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (prefiereQuieto || destino === 0) {
+    elemento.textContent = destino;
+    return;
+  }
+
+  const inicio = performance.now();
+  function paso(ahora) {
+    const avance = Math.min((ahora - inicio) / duracion, 1);
+    // Desaceleración suave al final
+    const suave = 1 - Math.pow(1 - avance, 3);
+    elemento.textContent = Math.round(destino * suave);
+    if (avance < 1) requestAnimationFrame(paso);
+    else elemento.textContent = destino;
+  }
+  requestAnimationFrame(paso);
+}
 
 /* =====================================================
    Construir la pantalla del día
    ===================================================== */
+let recuerdoDeHoy = null;
+
 function mostrarRegaloDeHoy() {
-  const recuerdo = obtenerRecuerdoDeHoy();
-  const pregunta = obtenerPregunta(recuerdo);
-  const cierre = obtenerCierre(recuerdo);
+  recuerdoDeHoy = obtenerRecuerdoDeHoy();
+  const pregunta = obtenerPregunta(recuerdoDeHoy);
+  const cierre = obtenerCierre(recuerdoDeHoy);
 
-  document.getElementById("memory-date").textContent = recuerdo.fecha_memoria;
+  document.getElementById("memory-date").textContent = recuerdoDeHoy.fecha_memoria;
   document.getElementById("couple-names").textContent = NOMBRES_PAREJA;
-  construirCarrusel(recuerdo.fotos, recuerdo.fecha_memoria);
+  construirCarrusel(recuerdoDeHoy.fotos, recuerdoDeHoy.fecha_memoria);
 
-  document.getElementById("letter-text").textContent = conNombreHijo(recuerdo.carta);
+  document.getElementById("letter-text").textContent = conNombreHijo(recuerdoDeHoy.carta);
   document.getElementById("letter-question").textContent = pregunta.pregunta;
   document.getElementById("confirm-btn").textContent = pregunta.boton;
 
   document.getElementById("final-message").textContent = conNombreHijo(cierre);
-  const finalPhoto = document.getElementById("final-photo");
-  finalPhoto.src = recuerdo.fotos[0];
-  finalPhoto.alt = recuerdo.fecha_memoria;
 
-  const { años, meses, dias } = calcularTiempoJuntos(FECHA_RELACION);
-  document.getElementById("years-num").textContent = años;
-  document.getElementById("months-num").textContent = meses;
-  document.getElementById("days-num").textContent = dias;
+  const finalPhoto = document.getElementById("final-photo");
+  finalPhoto.classList.remove("loaded");
+  finalPhoto.src = recuerdoDeHoy.fotos[0];
+  finalPhoto.alt = recuerdoDeHoy.fecha_memoria;
+  alCargarImagen(finalPhoto, null);
 
   const splash = document.getElementById("splash");
   const daily = document.getElementById("daily");
   splash.classList.add("hiding");
-  setTimeout(() => {
+  setTimeout(function () {
     splash.hidden = true;
     daily.hidden = false;
     daily.classList.add("reveal");
-  }, 480);
+  }, 520);
 }
 
 /* =====================================================
-   Interacción
+   Música (YouTube, solo audio)
    ===================================================== */
-document.getElementById("wife-name-btn").textContent = NOMBRE_ESPOSA;
-
 const muteToggle = document.getElementById("mute-toggle");
+const muteIcon = document.getElementById("mute-icon");
+let ytPlayer = null;
+let ytPlayerListo = false;
 let reproducirEnCuantoEsteListo = false;
 
 function intentarReproducirCancion() {
@@ -456,19 +651,51 @@ function intentarReproducirCancion() {
     ytPlayer.playVideo();
     muteToggle.hidden = false;
   } else {
-    // El reproductor de YouTube aún no cargó (tarda un poco en llegar desde
-    // internet) — dejamos marcado que hay que reproducir en cuanto esté listo.
+    // El reproductor aún viene en camino desde internet:
+    // lo dejamos marcado para que suene apenas esté listo.
     reproducirEnCuantoEsteListo = true;
   }
 }
 
-// ---------- Confeti de girasoles y corazones ----------
+muteToggle.addEventListener("click", function () {
+  if (!ytPlayer) return;
+  const estaSilenciado = ytPlayer.isMuted();
+  if (estaSilenciado) ytPlayer.unMute();
+  else ytPlayer.mute();
+  muteIcon.textContent = estaSilenciado ? "🔊" : "🔇";
+  muteToggle.setAttribute("aria-label", estaSilenciado ? "Silenciar música" : "Activar música");
+});
+
+// El script de YouTube llama a esta función al terminar de cargar.
+// El nombre es fijo, no lo cambies.
+window.onYouTubeIframeAPIReady = function () {
+  ytPlayer = new YT.Player("yt-player-slot", {
+    height: "0",
+    width: "0",
+    videoId: YOUTUBE_VIDEO_ID,
+    playerVars: { autoplay: 0, controls: 0, playsinline: 1, rel: 0 },
+    events: {
+      onReady: function () {
+        ytPlayerListo = true;
+        if (reproducirEnCuantoEsteListo) intentarReproducirCancion();
+      }
+    }
+  });
+};
+
+/* =====================================================
+   Confeti de girasoles y corazones
+   ===================================================== */
 function lanzarConfeti(origenEl) {
+  const prefiereQuieto = window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefiereQuieto) return;
+
   const rect = origenEl.getBoundingClientRect();
   const originX = rect.left + rect.width / 2;
   const originY = rect.top + rect.height / 2;
-  const simbolos = ["🌻", "♥", "🌻", "♥"];
-  const cantidad = 16;
+  const simbolos = ["🌻", "♥", "🌻", "♥", "✿"];
+  const cantidad = 20;
 
   for (let i = 0; i < cantidad; i++) {
     const pieza = document.createElement("span");
@@ -477,64 +704,88 @@ function lanzarConfeti(origenEl) {
     pieza.setAttribute("aria-hidden", "true");
 
     const angulo = Math.random() * Math.PI * 2;
-    const distancia = 70 + Math.random() * 110;
+    const distancia = 80 + Math.random() * 130;
     const tx = Math.cos(angulo) * distancia;
-    const ty = Math.sin(angulo) * distancia - 50; // sesgo hacia arriba
-    const rot = Math.round(Math.random() * 260 - 130) + "deg";
+    const ty = Math.sin(angulo) * distancia - 60; // sesgo hacia arriba
+    const rot = Math.round(Math.random() * 300 - 150) + "deg";
 
     pieza.style.left = originX + "px";
     pieza.style.top = originY + "px";
+    pieza.style.fontSize = (16 + Math.random() * 12) + "px";
+    pieza.style.animationDelay = (Math.random() * 0.12) + "s";
     pieza.style.setProperty("--tx", tx + "px");
     pieza.style.setProperty("--ty", ty + "px");
     pieza.style.setProperty("--rot", rot);
 
     document.body.appendChild(pieza);
-    setTimeout(() => pieza.remove(), 1050);
+    setTimeout(function () { pieza.remove(); }, 1400);
   }
 }
 
-// ---------- Primer botón: abre el regalo + arranca la canción ----------
-document.getElementById("open-gift").addEventListener("click", (e) => {
-  // El intento de reproducir se hace aquí, en el primer toque del usuario,
-  // que es el único momento en que el navegador garantiza permitir sonido.
+/* =====================================================
+   Interacción
+   ===================================================== */
+document.getElementById("wife-name-btn").textContent = NOMBRE_ESPOSA;
+
+// ---------- 1. Abrir el regalo (y arrancar la canción) ----------
+document.getElementById("open-gift").addEventListener("click", function (e) {
+  // El intento de reproducir va aquí, dentro del primer toque del usuario:
+  // es el único momento en que el celular garantiza permitir sonido.
   intentarReproducirCancion();
 
-  e.currentTarget.classList.add("breaking");
-  setTimeout(mostrarRegaloDeHoy, 350);
+  e.currentTarget.disabled = true;
+  setTimeout(mostrarRegaloDeHoy, 240);
 });
 
-// ---------- Apertura animada del sobre + confeti ----------
-document.getElementById("open-letter").addEventListener("click", (e) => {
-  lanzarConfeti(e.currentTarget);
+// ---------- 2. Abrir el sobre ----------
+document.getElementById("open-letter").addEventListener("click", function (e) {
+  const boton = e.currentTarget;
+  boton.disabled = true;
+  lanzarConfeti(boton);
+  boton.classList.add("breaking");
 
-  e.currentTarget.classList.add("breaking"); // el sello se encoge y desaparece
   const envelopeWrap = document.getElementById("envelope-wrap");
   const letterWrap = document.getElementById("letter-wrap");
 
-  envelopeWrap.classList.add("opening"); // la solapa se abre hacia atrás
+  envelopeWrap.classList.add("opening");          // la solapa se abre
+  setTimeout(function () {
+    envelopeWrap.classList.add("opened");         // el sobre se desvanece
+  }, 600);
 
-  setTimeout(() => {
-    envelopeWrap.classList.add("opened"); // el sobre, ya vacío, se desvanece
-  }, 550);
-
-  setTimeout(() => {
+  setTimeout(function () {
     envelopeWrap.hidden = true;
     letterWrap.hidden = false;
-    letterWrap.classList.add("emerge"); // la carta "crece" desde el sobre
-    letterWrap.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 680);
+    letterWrap.classList.add("emerge");           // la carta emerge
+    letterWrap.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 730);
 });
 
-// ---------- Confirmar carta → revelar el contador ----------
-document.getElementById("confirm-btn").addEventListener("click", () => {
+// ---------- 3. Confirmar la carta → revelar el contador ----------
+document.getElementById("confirm-btn").addEventListener("click", function (e) {
   const finalWrap = document.getElementById("final-wrap");
+  e.currentTarget.disabled = true;
   finalWrap.hidden = false;
-  setTimeout(() => {
+
+  const { años, meses, dias } = calcularTiempoJuntos(FECHA_RELACION);
+  // Pequeña espera para que la animación arranque cuando ya está a la vista
+  setTimeout(function () {
+    animarNumero(document.getElementById("years-num"), años, 1100);
+    animarNumero(document.getElementById("months-num"), meses, 1100);
+    animarNumero(document.getElementById("days-num"), dias, 1100);
+  }, 380);
+
+  setTimeout(function () {
     finalWrap.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 50);
+  }, 60);
 });
 
-// ---------- "Verlo de nuevo" → vuelve al splash sin recargar la página ----------
+// La foto final también se puede ampliar
+document.getElementById("final-photo").addEventListener("click", function (e) {
+  if (!e.currentTarget.getAttribute("src")) return;
+  abrirLightbox(0, [e.currentTarget.getAttribute("src")], e.currentTarget.alt);
+});
+
+// ---------- 4. "Verlo de nuevo" ----------
 function reiniciarRegalo() {
   const splash = document.getElementById("splash");
   const daily = document.getElementById("daily");
@@ -542,29 +793,33 @@ function reiniciarRegalo() {
   const letterWrap = document.getElementById("letter-wrap");
   const finalWrap = document.getElementById("final-wrap");
   const sealBtn = document.getElementById("open-letter");
-  const carousel = document.getElementById("carousel");
 
-  // Pantalla diaria → oculta, splash → visible otra vez
+  // Pantallas de vuelta a su estado inicial
   daily.hidden = true;
   daily.classList.remove("reveal");
   splash.hidden = false;
   splash.classList.remove("hiding");
+  document.getElementById("open-gift").disabled = false;
 
-  // Sobre, carta y contador vuelven a su estado inicial
   envelopeWrap.hidden = false;
   envelopeWrap.classList.remove("opening", "opened");
   sealBtn.classList.remove("breaking");
+  sealBtn.disabled = false;
+
   letterWrap.hidden = true;
   letterWrap.classList.remove("emerge");
   finalWrap.hidden = true;
+  document.getElementById("confirm-btn").disabled = false;
 
-  // El carrusel vuelve a la primera foto
+  // Contador y carrusel a cero
+  document.getElementById("years-num").textContent = "0";
+  document.getElementById("months-num").textContent = "0";
+  document.getElementById("days-num").textContent = "0";
+  const carousel = document.getElementById("carousel");
   carousel.scrollLeft = 0;
-  document.querySelectorAll("#carousel-dots .dot").forEach((d, i) => {
-    d.classList.toggle("active", i === 0);
-  });
+  actualizarPuntos(0);
 
-  // La canción vuelve al inicio, lista para sonar de nuevo con el primer botón
+  // La canción vuelve al principio, lista para sonar otra vez
   if (ytPlayer && typeof ytPlayer.pauseVideo === "function") {
     ytPlayer.pauseVideo();
     if (typeof ytPlayer.seekTo === "function") ytPlayer.seekTo(0, true);
@@ -577,53 +832,14 @@ function reiniciarRegalo() {
 
 document.getElementById("restart-btn").addEventListener("click", reiniciarRegalo);
 
-muteToggle.addEventListener("click", () => {
-  if (!ytPlayer) return;
-  const estaSilenciado = ytPlayer.isMuted();
-  if (estaSilenciado) {
-    ytPlayer.unMute();
-  } else {
-    ytPlayer.mute();
-  }
-  muteToggle.textContent = estaSilenciado ? "🔊" : "🔇";
-  muteToggle.setAttribute(
-    "aria-label",
-    estaSilenciado ? "Silenciar música" : "Activar música"
-  );
-});
-
-/* =====================================================
-   Reproductor de YouTube (solo audio, oculto)
-   ===================================================== */
-let ytPlayer = null;
-let ytPlayerListo = false;
-
-// Esta función la llama automáticamente el script de YouTube (iframe_api)
-// en cuanto termina de cargar. El nombre es fijo, no lo cambies.
-window.onYouTubeIframeAPIReady = function () {
-  ytPlayer = new YT.Player("yt-player-slot", {
-    height: "0",
-    width: "0",
-    videoId: YOUTUBE_VIDEO_ID,
-    playerVars: { autoplay: 0, controls: 0, playsinline: 1 },
-    events: {
-      onReady: () => {
-        ytPlayerListo = true;
-        // Si ella ya había tocado el primer botón antes de que esto
-        // terminara de cargar, reproducimos apenas esté listo.
-        if (reproducirEnCuantoEsteListo) {
-          intentarReproducirCancion();
-        }
-      }
-    }
-  });
-};
-
 /* =====================================================
    Service Worker (PWA)
    ===================================================== */
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js").catch(function () {
+      // Si falla (por ejemplo al abrir el archivo en local sin servidor),
+      // la app sigue funcionando igual, solo sin modo offline.
+    });
   });
 }
