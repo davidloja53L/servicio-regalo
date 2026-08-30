@@ -765,6 +765,7 @@ document.getElementById("confirm-btn").addEventListener("click", function (e) {
   const finalWrap = document.getElementById("final-wrap");
   e.currentTarget.disabled = true;
   finalWrap.hidden = false;
+  document.getElementById("footer-note").hidden = false;
 
   const { años, meses, dias } = calcularTiempoJuntos(FECHA_RELACION);
   // Pequeña espera para que la animación arranque cuando ya está a la vista
@@ -809,6 +810,7 @@ function reiniciarRegalo() {
   letterWrap.hidden = true;
   letterWrap.classList.remove("emerge");
   finalWrap.hidden = true;
+  document.getElementById("footer-note").hidden = true;
   document.getElementById("confirm-btn").disabled = false;
 
   // Contador y carrusel a cero

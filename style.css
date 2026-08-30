@@ -18,8 +18,9 @@
   --gold:            #C9A15C;
   --gold-light:      #E6CD96;
   --gold-pale:       #F0E0C0;
-  --ink:             #47302A;
-  --ink-soft:        #6B5148;
+  --pink-mono:       #C97B93;
+  --ink:             #3B2620;
+  --ink-soft:        #5E463C;
 
   /* Tipografía */
   --font-display: 'Dancing Script', 'Brush Script MT', cursive;
@@ -178,7 +179,7 @@ button {
 .tagline {
   font-family: var(--font-serif);
   font-style: italic;
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(21px, 6vw, 27px);
   line-height: 1.4;
   color: var(--ink);
@@ -270,8 +271,8 @@ button {
 .memory-date {
   font-family: var(--font-serif);
   font-style: italic;
-  font-weight: 400;
-  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 500;
+  font-size: clamp(19px, 5.2vw, 23px);
   color: var(--ink);
   text-align: center;
   margin: 4px 0 22px;
@@ -292,15 +293,22 @@ button {
     0 0 0 8px rgba(201, 161, 92, 0.28),
     var(--shadow-card);
 }
+/* Nota: "D & D" está fijo aquí a propósito (no viene de app.js).
+   Si algún día cambian los nombres, edita este texto también en
+   .final-photo-frame::after, un poco más abajo en este archivo. */
 .carousel-frame::after {
-  content: "♥";
+  content: "D & D";
   position: absolute;
   bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
-  color: var(--gold);
-  font-size: 11px;
-  opacity: 0.75;
+  color: var(--pink-mono);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  opacity: 0.85;
 }
 
 .carousel {
@@ -626,13 +634,13 @@ button {
   position: relative;
   font-family: var(--font-serif);
   font-style: italic;
-  font-weight: 400;
-  font-size: clamp(16.5px, 4.4vw, 18.5px);
-  line-height: 1.78;
+  font-weight: 500;
+  font-size: clamp(18px, 5vw, 21px);
+  line-height: 1.62;
   color: var(--ink);
-  max-width: 30ch;
+  max-width: 29ch;
   margin: 0 auto;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.008em;
 }
 
 .letter-question {
@@ -728,14 +736,18 @@ button {
     var(--shadow-card);
 }
 .final-photo-frame::after {
-  content: "♥";
+  content: "D & D";
   position: absolute;
   bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
-  color: var(--gold);
-  font-size: 11px;
-  opacity: 0.75;
+  color: var(--pink-mono);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  opacity: 0.85;
 }
 .final-photo-frame .photo-inner {
   position: relative;
@@ -762,8 +774,9 @@ button {
 .final-message {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: clamp(18px, 5vw, 21px);
-  line-height: 1.55;
+  font-weight: 500;
+  font-size: clamp(19px, 5.2vw, 22px);
+  line-height: 1.5;
   color: var(--ink);
   max-width: 26ch;
   margin: 26px auto 0;
