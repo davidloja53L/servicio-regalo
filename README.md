@@ -1,19 +1,19 @@
 # Para Daniela, con amor 💛
 
-App web estática (PWA). Cada día, en un ciclo de 30 días, muestra:
+App web estática (PWA). Cada día, durante 3 meses (90 días), muestra:
 
-1. **Splash** — botón "Te amo, Daniela"
-2. **Carrusel de fotos** (2-3 por día, deslizable) en un marco romántico, + nombres de la pareja
-3. **Sobre sellado** — al tocarlo, la solapa se abre de verdad y la carta emerge desde adentro
-4. **Carta + pregunta** — al confirmar, suena "Until I Found You" y se revela el contador
-5. **Tiempo juntos** — años/meses/días calculados en automático desde tu aniversario, + foto de cierre + mensaje final
+1. **Splash** — botón "Te amo, Daniela" (aquí arranca la canción)
+2. **Carrusel de fotos** (2-3 por día, deslizable, con zoom al tocarlas) en un marco romántico, + nombres de la pareja
+3. **Sobre sellado** — al tocarlo, salta un confeti de girasoles y corazones, la solapa se abre de verdad y la carta emerge desde adentro, escrita sobre una hoja de papel con pliegues
+4. **Carta + pregunta** — al confirmar, se revela el contador
+5. **Tiempo juntos** — "Han sido los mejores" + años/meses/días calculados en automático desde tu aniversario + "de mi vida", foto de cierre (con zoom), mensaje final, y un botón "Verlo de nuevo" para repetir todo sin recargar la página
 
-Los días alternan uno a uno: los días pares (2, 4, 6...) giran en torno a Emi, los impares son de pareja (Nueva York, Papallacta, momentos en casa), y el día 30 cierra con un mensaje de familia completa.
+Hay **45 días únicos** de contenido (22 de pareja, 22 de Emi/familia, 1 de cierre especial), y se reparten en un **orden fijo pero barajado** a lo largo de los 90 días — cada uno se repite exactamente 2 veces en el trimestre, nunca dos veces seguidas, y el orden ya está definido así que siempre se ve igual (no cambia cada vez que ella abre la página, solo según qué día del calendario sea).
 
 ## Archivos
-- `index.html` — estructura de las 2 pantallas (splash + pantalla diaria con sus 3 secciones)
+- `index.html` — estructura de las 2 pantallas (splash + pantalla diaria con sus secciones)
 - `style.css` — diseño romántico, mobile-first
-- `app.js` — las 30 cartas, lógica del carrusel, del contador y del ciclo de 30 días
+- `app.js` — las 45 cartas, el orden barajado de 90 días, lógica del carrusel, el contador y el lightbox
 - `manifest.json` — configuración PWA
 - `sw.js` — service worker (carga instantánea del cascarón)
 - `icons/` — íconos para "Añadir a pantalla de inicio"
@@ -27,26 +27,32 @@ Al principio del archivo hay 5 constantes para personalizar:
 | `NOMBRE_ESPOSA` | Nombre en el botón de inicio | `"Daniela"` |
 | `NOMBRES_PAREJA` | Firma bajo el carrusel de fotos | `"David & Daniela"` |
 | `NOMBRE_HIJO` | Cómo se le nombra en las cartas | `"Emi"` |
-| `FECHA_INICIO` | Día en que arranca el ciclo de 30 días | `"2026-08-06"` (de prueba — cámbiala antes de publicar) |
+| `FECHA_INICIO` | Día en que arranca el ciclo de 3 meses | `"2026-08-06"` (de prueba — cámbiala antes de publicar) |
 | `FECHA_RELACION` | Aniversario, para que el contador sea exacto | `"2011-12-06"` |
 
 Ya dejé las primeras cuatro configuradas. Solo falta que cambies **`FECHA_INICIO`** por la fecha real en la que quieres que arranque el regalo antes de publicarlo (ahora mismo dice 6 de agosto, puesto solo para pruebas).
 
-Luego, en el array `RECUERDOS`, cada uno de los 30 días tiene:
+Luego, en el array `RECUERDOS`, cada uno de los **45 días únicos** tiene:
 - `fecha_memoria`: el título sobre el carrusel (puedes dejar la descripción que ya tiene, o poner la fecha real de esa foto)
-- `fotos`: un array de 2 o 3 URLs — reemplaza cada `"PEGA_AQUI_TU_FOTO_D#_N"` con el link real de tu foto:
-  - Opción fácil: sube tus fotos a una carpeta `fotos/` dentro del proyecto (ej. `fotos/nyc-1.jpg`) y usa esa ruta relativa.
-  - También funciona un link público de Imgur, Google Photos, etc.
+- `fotos`: un array de 2 o 3 URLs — reemplaza cada `"PEGA_AQUI_TU_FOTO_D#_N"` con el link real de tu foto. En total son **99 fotos** para completar los 45 días.
+  - Opción recomendada: sube tus fotos a una carpeta `fotos/` dentro del proyecto (ej. `fotos/nyc-1.jpg`) y usa esa ruta relativa — es la más rápida, ya que se sirven desde el mismo sitio (ver nota sobre calidad/tamaño más abajo).
+  - También funciona un link público de Imgur.
 - `carta`: el mensaje del día — ya viene escrito, pero puedes editarlo a tu gusto.
 
 La foto de cierre (la que acompaña al contador) reutiliza automáticamente la primera foto del carrusel de ese día — no necesitas subir una foto extra.
+
+### Sobre el tamaño/calidad de las fotos
+Cualquier tamaño funciona (el sitio recorta automáticamente al marco), pero para que cargue rápido y se vea nítido:
+- Ideal: que el lado más largo no pase de ~1600-2000 px, comprimidas a JPEG ~80% de calidad (quedan entre 150-500 KB cada una).
+- Evita subir las fotos originales del celular sin comprimir — con 99 fotos, eso puede hacer que el sitio cargue lento la primera vez.
+- Si una foto es horizontal, revisa que la parte importante quede centrada, ya que el marco es vertical y recorta los lados.
 
 ## 2. La música (ya está resuelta, no necesitas archivos)
 
 En vez de un mp3, la canción se reproduce desde YouTube (audio oficial de Stephen Sanchez), embebido de forma invisible en la página — no hay que comprar ni subir nada.
 
 - Ya dejé configurado el video correcto en `app.js`, en la constante `YOUTUBE_VIDEO_ID`.
-- Empieza a sonar en cuanto ella toca el botón de confirmación de la carta ("Te elijo a ti" o la variante que le toque ese día) — justo ahí, porque los celulares exigen que el audio arranque de un toque directo del usuario. Arriba a la derecha aparece un botón 🔊 para silenciarla si quiere.
+- Empieza a sonar en cuanto ella toca el primer botón ("Te amo, Daniela") en la pantalla de inicio — justo ahí, porque los celulares exigen que el audio arranque de un toque directo del usuario. Arriba a la derecha aparece un botón 🔊 para silenciarla si quiere.
 - Si en algún momento ese video deja de estar disponible para incrustar (a veces pasa con contenido con derechos), solo busca otra subida oficial de la misma canción en YouTube, copia la parte de la URL que va después de `v=`, y reemplaza el valor de `YOUTUBE_VIDEO_ID` en `app.js`.
 
 ## 3. Subir a GitHub (sin terminal)
@@ -68,6 +74,6 @@ En vez de un mp3, la canción se reproduce desde YouTube (audio oficial de Steph
 3. Quedará como un ícono con el corazón dorado, y se abrirá en pantalla completa.
 
 ## Notas
-- El ciclo de 30 días se repite automáticamente — no necesitas hacer nada después de publicarlo.
+- El ciclo de 90 días (3 meses) se repite automáticamente — no necesitas hacer nada después de publicarlo.
 - El contador de "tiempo juntos" se recalcula solo, cada vez que ella lo abre, así que siempre estará al día.
 - La canción necesita conexión a internet para sonar (viene de YouTube) — no funcionará si ella abre la app sin datos o wifi. El resto de la app (fotos, cartas, contador) si quedó cacheado por el service worker, sí funciona sin conexión.
