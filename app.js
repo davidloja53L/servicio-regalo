@@ -22,6 +22,13 @@ const FECHA_INICIO = "2026-08-06";
 // 👉 Fecha en la que empezó su relación: 6 de diciembre de 2011.
 const FECHA_RELACION = "2011-12-06";
 
+// 👉 Canción que suena al confirmar la carta ("Te elijo a ti ♥" y variantes).
+// Es el ID del video de YouTube — la parte después de "v=" en la URL.
+// Ya está puesto "Until I Found You" (audio oficial de Stephen Sanchez).
+// Si algún día ese video deja de estar disponible para incrustar, busca
+// otra subida oficial de la misma canción en YouTube y pega aquí su ID.
+const YOUTUBE_VIDEO_ID = "MlThQTo6D8A";
+
 /* =====================================================
    Los 30 días. Cada uno tiene:
    - fecha_memoria: el título sobre el carrusel (fecha real o descripción del momento)
@@ -319,51 +326,84 @@ function mostrarRegaloDeHoy() {
    ===================================================== */
 document.getElementById("wife-name-btn").textContent = NOMBRE_ESPOSA;
 
-const bgMusic = document.getElementById("bg-music");
 const muteToggle = document.getElementById("mute-toggle");
 
 document.getElementById("open-gift").addEventListener("click", (e) => {
-  // El play() debe llamarse de forma síncrona, aquí mismo, dentro del gesto
-  // del usuario (el toque en el botón). Si se llama después (ej. dentro de
-  // un setTimeout) Safari/iOS bloquea el sonido.
-  bgMusic.play().then(() => {
-    muteToggle.hidden = false;
-  }).catch(() => {
-    // Si el navegador igual bloquea el audio, la app sigue funcionando normal.
-  });
-
   e.currentTarget.classList.add("breaking");
   setTimeout(mostrarRegaloDeHoy, 350);
 });
 
-muteToggle.addEventListener("click", () => {
-  bgMusic.muted = !bgMusic.muted;
-  muteToggle.textContent = bgMusic.muted ? "🔇" : "🔊";
-  muteToggle.setAttribute(
-    "aria-label",
-    bgMusic.muted ? "Activar música" : "Silenciar música"
-  );
-});
-
+// ---------- Apertura animada del sobre ----------
 document.getElementById("open-letter").addEventListener("click", (e) => {
-  e.currentTarget.classList.add("breaking");
+  e.currentTarget.classList.add("breaking"); // el sello se encoge y desaparece
   const envelopeWrap = document.getElementById("envelope-wrap");
   const letterWrap = document.getElementById("letter-wrap");
-  envelopeWrap.classList.add("hiding");
+
+  envelopeWrap.classList.add("opening"); // la solapa se abre hacia atrás
+
+  setTimeout(() => {
+    envelopeWrap.classList.add("opened"); // el sobre, ya vacío, se desvanece
+  }, 550);
+
   setTimeout(() => {
     envelopeWrap.hidden = true;
     letterWrap.hidden = false;
+    letterWrap.classList.add("emerge"); // la carta "crece" desde el sobre
     letterWrap.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 320);
+  }, 680);
 });
 
+// ---------- Confirmar carta → revelar contador + reproducir canción ----------
 document.getElementById("confirm-btn").addEventListener("click", () => {
   const finalWrap = document.getElementById("final-wrap");
   finalWrap.hidden = false;
   setTimeout(() => {
     finalWrap.scrollIntoView({ behavior: "smooth", block: "start" });
   }, 50);
+
+  // El play() se llama aquí mismo, dentro del gesto del usuario (el toque
+  // en el botón). Si se llamara después, en un setTimeout, Safari/iOS
+  // bloquearía el sonido.
+  if (ytPlayer && ytPlayerListo && typeof ytPlayer.playVideo === "function") {
+    ytPlayer.playVideo();
+    muteToggle.hidden = false;
+  }
 });
+
+muteToggle.addEventListener("click", () => {
+  if (!ytPlayer) return;
+  const estaSilenciado = ytPlayer.isMuted();
+  if (estaSilenciado) {
+    ytPlayer.unMute();
+  } else {
+    ytPlayer.mute();
+  }
+  muteToggle.textContent = estaSilenciado ? "🔊" : "🔇";
+  muteToggle.setAttribute(
+    "aria-label",
+    estaSilenciado ? "Silenciar música" : "Activar música"
+  );
+});
+
+/* =====================================================
+   Reproductor de YouTube (solo audio, oculto)
+   ===================================================== */
+let ytPlayer = null;
+let ytPlayerListo = false;
+
+// Esta función la llama automáticamente el script de YouTube (iframe_api)
+// en cuanto termina de cargar. El nombre es fijo, no lo cambies.
+window.onYouTubeIframeAPIReady = function () {
+  ytPlayer = new YT.Player("yt-player-slot", {
+    height: "0",
+    width: "0",
+    videoId: YOUTUBE_VIDEO_ID,
+    playerVars: { autoplay: 0, controls: 0, playsinline: 1 },
+    events: {
+      onReady: () => { ytPlayerListo = true; }
+    }
+  });
+};
 
 /* =====================================================
    Service Worker (PWA)

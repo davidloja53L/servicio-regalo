@@ -3,9 +3,9 @@
 App web estática (PWA). Cada día, en un ciclo de 30 días, muestra:
 
 1. **Splash** — botón "Te amo, Daniela"
-2. **Carrusel de fotos** (2-3 por día, deslizable) + nombres de la pareja
-3. **Sobre sellado** — al tocarlo, se revela la carta del día
-4. **Carta + pregunta** — al confirmar, se revela el contador
+2. **Carrusel de fotos** (2-3 por día, deslizable) en un marco romántico, + nombres de la pareja
+3. **Sobre sellado** — al tocarlo, la solapa se abre de verdad y la carta emerge desde adentro
+4. **Carta + pregunta** — al confirmar, suena "Until I Found You" y se revela el contador
 5. **Tiempo juntos** — años/meses/días calculados en automático desde tu aniversario, + foto de cierre + mensaje final
 
 Los días alternan uno a uno: los días pares (2, 4, 6...) giran en torno a Emi, los impares son de pareja (Nueva York, Papallacta, momentos en casa), y el día 30 cierra con un mensaje de familia completa.
@@ -41,19 +41,17 @@ Luego, en el array `RECUERDOS`, cada uno de los 30 días tiene:
 
 La foto de cierre (la que acompaña al contador) reutiliza automáticamente la primera foto del carrusel de ese día — no necesitas subir una foto extra.
 
-## 2. Agregar la música
+## 2. La música (ya está resuelta, no necesitas archivos)
 
-1. Consigue el archivo de audio (mp3) de la canción — debe ser un archivo que ya tengas contigo (comprado, exportado de tu librería, etc.). No incluyo ningún archivo de música por temas de derechos de autor.
-2. Colócalo en la carpeta `audio/` del proyecto con el nombre exacto `cancion.mp3` (reemplaza el archivo `audio/LEEME.txt` de ejemplo).
-3. Si tu archivo se llama distinto o quieres otro formato, abre `index.html` y cambia la línea:
-   ```html
-   <audio id="bg-music" src="./audio/cancion.mp3" loop preload="none"></audio>
-   ```
-4. La canción empieza a sonar en cuanto ella toca el botón "Te amo, Daniela" en la pantalla de inicio — los celulares no permiten reproducir audio automáticamente sin que la persona toque algo primero, así que quedó enganchada justo a ese primer toque. Arriba a la derecha aparece un botón pequeño 🔊 para que ella pueda silenciarlo si quiere.
+En vez de un mp3, la canción se reproduce desde YouTube (audio oficial de Stephen Sanchez), embebido de forma invisible en la página — no hay que comprar ni subir nada.
+
+- Ya dejé configurado el video correcto en `app.js`, en la constante `YOUTUBE_VIDEO_ID`.
+- Empieza a sonar en cuanto ella toca el botón de confirmación de la carta ("Te elijo a ti" o la variante que le toque ese día) — justo ahí, porque los celulares exigen que el audio arranque de un toque directo del usuario. Arriba a la derecha aparece un botón 🔊 para silenciarla si quiere.
+- Si en algún momento ese video deja de estar disponible para incrustar (a veces pasa con contenido con derechos), solo busca otra subida oficial de la misma canción en YouTube, copia la parte de la URL que va después de `v=`, y reemplaza el valor de `YOUTUBE_VIDEO_ID` en `app.js`.
 
 ## 3. Subir a GitHub (sin terminal)
 1. Entra a [github.com](https://github.com), crea un repositorio nuevo (ej. `regalo-daniela`), sin marcar la opción de README.
-2. En la página del repo, usa **Add file → Upload files** y arrastra todos los archivos y las carpetas `icons/` y `audio/` (con tu mp3 ya adentro).
+2. En la página del repo, usa **Add file → Upload files** y arrastra todos los archivos y la carpeta `icons/`.
 3. Escribe un mensaje de commit y confirma con **Commit changes**.
 
 ## 4. Desplegar en Render
@@ -72,3 +70,4 @@ La foto de cierre (la que acompaña al contador) reutiliza automáticamente la p
 ## Notas
 - El ciclo de 30 días se repite automáticamente — no necesitas hacer nada después de publicarlo.
 - El contador de "tiempo juntos" se recalcula solo, cada vez que ella lo abre, así que siempre estará al día.
+- La canción necesita conexión a internet para sonar (viene de YouTube) — no funcionará si ella abre la app sin datos o wifi. El resto de la app (fotos, cartas, contador) si quedó cacheado por el service worker, sí funciona sin conexión.
