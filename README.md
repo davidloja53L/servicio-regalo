@@ -21,6 +21,7 @@ Hay **45 días únicos** de contenido (22 de pareja, 22 de Emi/familia, 1 de cie
 - `icons/` — íconos para "Añadir a pantalla de inicio"
 - `fotos/` — las 85 fotos en versión ligera (para el carrusel)
 - `fotos/full/` — las mismas fotos en versión grande (solo se descargan al hacer zoom)
+- `video/` — tu video sorpresa (`sorpresa.mp4`)
 
 ### Sobre las fotos
 Cada foto está guardada en dos tamaños. El sitio muestra la ligera (~89 KB) y solo
@@ -50,6 +51,16 @@ Luego, en el array `RECUERDOS`, cada uno de los **45 días únicos** tiene:
 
 La foto de cierre (la que acompaña al contador) reutiliza automáticamente la primera foto del carrusel de ese día — no necesitas subir una foto extra.
 
+## 1.1. Dos días especiales: cumpleaños y aniversario de bodas
+
+El **6 de octubre** (su cumpleaños) y el **14 de diciembre** (su aniversario de bodas) tienen su propio contenido y su propio ambiente visual (colores distintos, un mensaje especial arriba) — se activan solos cada año, automáticamente, sin que tengas que hacer nada más que completar sus fotos.
+
+Busca `DIAS_ESPECIALES` en `app.js` y reemplaza estos **6 placeholders nuevos** (3 fotos por cada fecha):
+- `PEGA_AQUI_TU_FOTO_CUMPLE_1`, `_2`, `_3`
+- `PEGA_AQUI_TU_FOTO_ANIV_1`, `_2`, `_3`
+
+Ya escribí una carta especial para cada fecha (editable ahí mismo si quieres cambiar el texto). Estos dos días siempre reemplazan lo que le tocaría por la rotación normal de los 45 recuerdos — el resto del año sigue funcionando exactamente igual.
+
 ### Sobre el tamaño/calidad de las fotos
 Cualquier tamaño funciona (el sitio recorta automáticamente al marco), pero para que cargue rápido y se vea nítido:
 - Ideal: que el lado más largo no pase de ~1600-2000 px, comprimidas a JPEG ~80% de calidad (quedan entre 150-500 KB cada una).
@@ -69,7 +80,21 @@ En vez de un mp3, la canción se reproduce desde YouTube (audio oficial de Steph
 2. En la página del repo, usa **Add file → Upload files** y arrastra todos los archivos y la carpeta `icons/`.
 3. Escribe un mensaje de commit y confirma con **Commit changes**.
 
-## 4. Desplegar en Render
+## 4. El video sorpresa
+
+Al final, después del contador de "tiempo juntos", hay un botón "Tengo una sorpresa más" que abre un video tuyo a pantalla completa (con controles, y se reproduce solo al abrirlo).
+
+1. Coloca tu video en la carpeta `video/` con el nombre exacto `sorpresa.mp4` (reemplaza el archivo `video/LEEME.txt` de ejemplo).
+2. Recomendado: formato MP4, resolución 720p — de sobra para celular, y mucho más liviano que 4K.
+3. Si pesa mucho (arriba de 60-80 MB), conviene comprimirlo antes de subirlo (por ejemplo con HandBrake, gratis) para no hacer lento el resto del sitio.
+
+Es siempre el mismo video, sin importar el día — no necesitas hacer nada más en el código. Se descarga solo desde la primera vez que ella abre el sitio (no hace falta que lo mire primero), así queda disponible sin internet desde el principio.
+
+**Sobre el audio del video:** mientras el video está abierto, la canción de fondo (Until I Found You) no se detiene — solo baja mucho de volumen, para que se escuche bien lo que digas en el video sin perder el ambiente de la música. Al cerrar el video, la canción vuelve exactamente al volumen que tenía. Si quieres que quede más baja o más alta durante el video, cambia el número de `VOLUMEN_MUSICA_CON_VIDEO` en `app.js` (va de 0 a 100).
+
+Si tu video ya tiene su propia voz o audio (por ejemplo, un mensaje hablado mientras pasan las fotos), no le agregues ninguna canción de fondo por dentro — usaría derechos de autor de esa canción de una forma distinta y más riesgosa que la que ya usamos para "Until I Found You" (que solo se incrusta desde YouTube, nunca se copia). Deja que tu voz sea el audio del video, y la música de fondo del sitio hace el resto.
+
+## 5. Desplegar en Render
 1. Entra a [render.com](https://render.com) y en el Dashboard elige **New +** → **Static Site**.
 2. Conecta tu cuenta de GitHub y selecciona el repositorio.
 3. En la configuración:
@@ -77,7 +102,7 @@ En vez de un mp3, la canción se reproduce desde YouTube (audio oficial de Steph
    - **Publish directory**: `.` (la raíz del repo).
 4. Clic en **Create Static Site**. Render te dará una URL tipo `https://regalo-daniela.onrender.com`.
 
-## 5. Que Daniela lo instale en su celular
+## 6. Que Daniela lo instale en su celular
 1. Envíale el link por WhatsApp.
 2. En Chrome (Android) o Safari (iPhone), puede tocar el menú y elegir **"Añadir a pantalla de inicio"**.
 3. Quedará como un ícono con el corazón dorado, y se abrirá en pantalla completa.
@@ -85,4 +110,5 @@ En vez de un mp3, la canción se reproduce desde YouTube (audio oficial de Steph
 ## Notas
 - El ciclo de 90 días (3 meses) se repite automáticamente — no necesitas hacer nada después de publicarlo.
 - El contador de "tiempo juntos" se recalcula solo, cada vez que ella lo abre, así que siempre estará al día.
-- La canción necesita conexión a internet para sonar (viene de YouTube) — no funcionará si ella abre la app sin datos o wifi. El resto de la app (fotos, cartas, contador) si quedó cacheado por el service worker, sí funciona sin conexión.
+- La canción necesita conexión a internet para sonar (viene de YouTube) — no funcionará si ella abre la app sin datos o wifi, pero el resto del regalo sigue funcionando normal, no se traba nada. Mientras ve tu video sorpresa, la canción no se detiene, solo baja de volumen (ver sección 4).
+- El resto sí funciona sin conexión una vez que abrió el sitio la primera vez: el diseño, las 45 cartas, el contador, tu video sorpresa (se descarga desde la primera visita), y las fotos que ya haya visto antes. Solo las fotos de un día que nunca ha abierto necesitan señal la primera vez.

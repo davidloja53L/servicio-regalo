@@ -1,16 +1,19 @@
 /* =====================================================
    Service Worker — "Para Daniela, con amor"
    -----------------------------------------------------
-   Hace dos cosas:
+   Hace tres cosas:
    1. Guarda el "cascarón" de la app (HTML, CSS, JS, iconos)
       para que la pantalla de inicio abra al instante.
    2. Va guardando las fotos que ella ya vio, así los días
       siguientes cargan más rápido y funcionan sin señal.
+   3. Descarga tu video sorpresa desde la primera visita, para
+      que quede disponible sin internet incluso antes de que
+      ella lo abra por primera vez.
    ===================================================== */
 
-const VERSION = "v2";
+const VERSION = "v3";
 const CACHE_SHELL = "regalo-daniela-shell-" + VERSION;
-const CACHE_FOTOS = "regalo-daniela-fotos-" + VERSION;
+const CACHE_MEDIA = "regalo-daniela-media-" + VERSION; // fotos + video
 
 const APP_SHELL = [
   "./",
@@ -22,11 +25,18 @@ const APP_SHELL = [
   "./icons/icon-512.png"
 ];
 
+// Se descarga aparte (no bloquea la instalación si aún no existe el
+// archivo real, por ejemplo mientras pruebas el sitio antes de subir
+// tu video definitivo).
+const MEDIA_EAGER = [
+  "./video/sorpresa.mp4"
+];
+
 /* ---------- Instalación ---------- */
 self.addEventListener("install", function (event) {
   event.waitUntil(
-    caches.open(CACHE_SHELL)
-      .then(function (cache) {
+    Promise.all([
+      caches.open(CACHE_SHELL).then(function (cache) {
         // addAll falla entero si un archivo falla; los añadimos de a uno
         // para que un fallo suelto no rompa toda la instalación.
         return Promise.all(
@@ -34,8 +44,15 @@ self.addEventListener("install", function (event) {
             return cache.add(url).catch(function () { return null; });
           })
         );
+      }),
+      caches.open(CACHE_MEDIA).then(function (cache) {
+        return Promise.all(
+          MEDIA_EAGER.map(function (url) {
+            return cache.add(url).catch(function () { return null; });
+          })
+        );
       })
-      .then(function () { return self.skipWaiting(); })
+    ]).then(function () { return self.skipWaiting(); })
   );
 });
 
@@ -49,7 +66,7 @@ self.addEventListener("activate", function (event) {
             .filter(function (n) {
               return n.indexOf("regalo-daniela-") === 0 &&
                      n !== CACHE_SHELL &&
-                     n !== CACHE_FOTOS;
+                     n !== CACHE_MEDIA;
             })
             .map(function (n) { return caches.delete(n); })
         );
@@ -70,16 +87,20 @@ self.addEventListener("fetch", function (event) {
   if (url.origin !== self.location.origin) return;
 
   const esFoto = url.pathname.indexOf("/fotos/") !== -1;
+  const esVideo = url.pathname.indexOf("/video/") !== -1;
 
-  if (esFoto) {
-    // Fotos: primero la caché (nunca cambian), si no, red y se guarda.
+  if (esFoto || esVideo) {
+    // Fotos y video: primero la caché (nunca cambian), si no, red y se
+    // guarda. Para el video, si el celular pide un "trozo" del archivo
+    // (esto pasa normalmente al reproducir/adelantar) igual se responde
+    // con la copia completa ya guardada — se reproduce bien igual.
     event.respondWith(
-      caches.match(req).then(function (guardada) {
+      caches.match(req, { ignoreSearch: true }).then(function (guardada) {
         if (guardada) return guardada;
         return fetch(req).then(function (respuesta) {
-          if (respuesta && respuesta.status === 200) {
+          if (respuesta && (respuesta.status === 200 || respuesta.status === 206)) {
             const copia = respuesta.clone();
-            caches.open(CACHE_FOTOS).then(function (cache) {
+            caches.open(CACHE_MEDIA).then(function (cache) {
               cache.put(req, copia);
             });
           }

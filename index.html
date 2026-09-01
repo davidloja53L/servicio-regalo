@@ -20,12 +20,24 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet" />
 
+<!-- Música: se adelanta la conexión a YouTube desde ya, para que cuando
+     ella toque el corazón la canción arranque lo más rápido posible
+     (el script en sí se sigue cargando más abajo, esto solo "calienta"
+     la conexión de antemano). -->
+<link rel="preconnect" href="https://www.youtube.com" />
+<link rel="preconnect" href="https://s.ytimg.com" crossorigin />
+<link rel="dns-prefetch" href="https://www.youtube.com" />
+<link rel="dns-prefetch" href="https://s.ytimg.com" />
+
 <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
 
 <!-- Corazones flotando de fondo -->
 <div class="ambient" aria-hidden="true">
+  <span class="orb orb1"></span>
+  <span class="orb orb2"></span>
+  <span class="orb orb3"></span>
   <span class="petal p1">♥</span>
   <span class="petal p2">♥</span>
   <span class="petal p3">♥</span>
@@ -38,9 +50,24 @@
   <div class="splash-inner">
     <span class="heart-mark reveal-1" aria-hidden="true">♥</span>
     <p class="tagline reveal-2">Para el amor de mi vida</p>
-    <button id="open-gift" class="pill-button reveal-3">
-      Te amo, <span id="wife-name-btn"></span>
+
+    <button id="open-gift" class="heart-button reveal-3" type="button" aria-label="Te amo, Dani — toca para abrir tu regalo">
+      <svg class="heart-svg" viewBox="0 0 100 92" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="heartFillGrad" x1="0" y1="0" x2="0.2" y2="1">
+            <stop offset="0%"   stop-color="#C0713F" />
+            <stop offset="45%"  stop-color="#A85C34" />
+            <stop offset="100%" stop-color="#803E20" />
+          </linearGradient>
+        </defs>
+        <path
+          class="heart-path"
+          d="M50 89 C 19 66, 0 45, 0 27 C 0 10, 14 0, 29 0 C 41 0, 50 9, 50 17 C 50 9, 59 0, 71 0 C 86 0, 100 10, 100 27 C 100 45, 81 66, 50 89 Z"
+          fill="url(#heartFillGrad)" />
+      </svg>
+      <span class="heart-text">Te amo,<br /><span id="wife-name-btn"></span></span>
     </button>
+
     <p class="hint reveal-4">Toca para abrir</p>
   </div>
 </section>
@@ -48,6 +75,7 @@
 <!-- ===================== PANTALLA DEL DÍA ===================== -->
 <section id="daily" class="screen daily-screen" hidden>
 
+  <p class="special-banner" id="special-banner" hidden></p>
   <p class="memory-date" id="memory-date"></p>
 
   <!-- Carrusel de fotos -->
@@ -119,12 +147,15 @@
 
     <div class="final-photo-frame">
       <div class="photo-inner">
-        <img id="final-photo" src="" alt="" />
+        <img id="final-photo" alt="" />
       </div>
     </div>
 
     <p class="final-message" id="final-message"></p>
 
+    <button id="open-video" class="pill-button video-btn" type="button">
+      <span class="video-btn-icon" aria-hidden="true">▶</span> Tengo una sorpresa más
+    </button>
     <button id="restart-btn" class="pill-button outline restart-btn" type="button">Verlo de nuevo ♥</button>
   </div>
 
@@ -137,9 +168,20 @@
   <button id="lightbox-prev" class="lightbox-nav prev" type="button" aria-label="Foto anterior">‹</button>
   <button id="lightbox-next" class="lightbox-nav next" type="button" aria-label="Foto siguiente">›</button>
   <div class="lightbox-stage">
-    <img id="lightbox-img" src="" alt="" />
+    <img id="lightbox-img" alt="" />
   </div>
   <p class="lightbox-hint" id="lightbox-hint">Toca la foto para acercar</p>
+</div>
+
+<!-- ===================== REPRODUCTOR DE VIDEO ===================== -->
+<div id="video-modal" class="video-modal" hidden role="dialog" aria-modal="true" aria-label="Un video para ti">
+  <button id="video-close" class="lightbox-close" type="button" aria-label="Cerrar video">✕</button>
+  <div class="video-stage">
+    <video id="video-player" controls playsinline preload="none">
+      <source id="video-source" src="video/sorpresa.mp4" type="video/mp4" />
+      Tu navegador no puede reproducir este video.
+    </video>
+  </div>
 </div>
 
 <!-- Reproductor de YouTube oculto (solo audio) -->

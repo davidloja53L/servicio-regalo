@@ -11,7 +11,7 @@
    6. RECUERDOS           → reemplaza cada "PEGA_AQUI..." con tus fotos reales
    ===================================================== */
 
-const NOMBRE_ESPOSA = "Daniela";
+const NOMBRE_ESPOSA = "Dani";
 const NOMBRES_PAREJA = "David & Daniela";
 const NOMBRE_HIJO = "Emi"; // se inserta donde veas {{HIJO}}
 
@@ -28,6 +28,12 @@ const FECHA_RELACION = "2011-12-06";
 // Si algún día ese video deja de estar disponible para incrustar, busca
 // otra subida oficial de la misma canción en YouTube y pega aquí su ID.
 const YOUTUBE_VIDEO_ID = "MlThQTo6D8A";
+
+// 👉 Qué tan baja queda la canción mientras se ve el video sorpresa
+// (0 = silencio total, 100 = volumen normal). No se detiene, solo baja,
+// para que se escuche bien lo que dices en el video sin perder el
+// ambiente de la música de fondo.
+const VOLUMEN_MUSICA_CON_VIDEO = 15;
 
 /* =====================================================
    Los 45 días únicos.  Cada uno tiene:
@@ -229,7 +235,7 @@ const PREGUNTAS_PAREJA = [
   { pregunta: "¿Lista para otra vuelta más a tu lado?", boton: "Siempre ♥" },
   { pregunta: "¿Seguimos sumando días juntos?", boton: "Contigo, sí ♥" },
   { pregunta: "¿Te animas a un viaje más conmigo?", boton: "A donde sea, contigo ♥" },
-  { pregunta: "¿Puedo seguir eligiéndote cada día?", boton: "Te elijo a ti ♥" },
+  { pregunta: "¿Me seguirás eligiendo cada día?", boton: "Te elijo a ti ♥" },
   { pregunta: "¿Seguimos construyendo esto, juntos?", boton: "Juntos, siempre ♥" }
 ];
 
@@ -277,7 +283,122 @@ const ORDEN_90_DIAS = [
   1, 3, 1, 21, 41, 19, 5, 6
 ];
 
+/* =====================================================
+   Días especiales del calendario real
+   -----------------------------------------------------
+   A diferencia de los 45 recuerdos normales (que rotan cada 24h sin
+   importar la fecha real), estos dos SÍ están atados al calendario:
+   se activan solos cada año, en la fecha exacta, sin que tengas que
+   tocar nada. Mientras dure ese día, reemplazan por completo el
+   recuerdo que le tocaría por la rotación normal, y cambian también
+   el ambiente visual del sitio (colores, un mensaje especial arriba).
+
+   La clave es "MM-DD" (mes-día), así se repite cada año automáticamente.
+   ===================================================== */
+const DIAS_ESPECIALES = {
+  // 👉 6 de octubre — cumpleaños de Daniela
+  "10-06": {
+    tipo: "cumpleanos",
+    tema: "cumpleanos",
+    banner_texto: "🎂 Feliz cumpleaños 🎂",
+    fecha_memoria: "Hoy es tu día",
+    fotos: [
+      "PEGA_AQUI_TU_FOTO_CUMPLE_1",
+      "PEGA_AQUI_TU_FOTO_CUMPLE_2",
+      "PEGA_AQUI_TU_FOTO_CUMPLE_3"
+    ],
+    carta:
+      "Hoy no es un día cualquiera: es el día en que naciste tú, la persona " +
+      "que le dio sentido a todo lo demás. Ojalá este día te recuerde, aunque " +
+      "sea un poco, todo lo que significas para mí y para {{HIJO}}. Feliz " +
+      "cumpleaños, mi amor — que este nuevo año te traiga toda la felicidad " +
+      "que tú nos regalas a diario.",
+    pregunta_fija: {
+      pregunta: "¿Lista para otro año siendo increíble?",
+      boton: "Vamos juntos ♥"
+    },
+    cierre_fijo: "Gracias por existir. Feliz cumpleaños, te amo con todo mi corazón."
+  },
+
+  // 👉 14 de diciembre — aniversario de bodas
+  // (distinto de FECHA_RELACION, que es cuando empezaron a salir)
+  "12-14": {
+    tipo: "aniversario",
+    tema: "aniversario",
+    banner_texto: "💍 Feliz aniversario 💍",
+    fecha_memoria: "Nuestro aniversario de bodas",
+    fotos: [
+      "PEGA_AQUI_TU_FOTO_ANIV_1",
+      "PEGA_AQUI_TU_FOTO_ANIV_2",
+      "PEGA_AQUI_TU_FOTO_ANIV_3"
+    ],
+    carta:
+      "El día que nos casamos prometimos algo para siempre, y hoy, cada " +
+      "aniversario, sigo sintiendo la misma certeza de aquel día. Gracias " +
+      "por elegirme como esposo, por construir conmigo esta familia, por " +
+      "seguir aquí. Feliz aniversario, mi amor — quiero mil años más contigo.",
+    pregunta_fija: {
+      pregunta: "¿Quieres seguir siendo mi esposa, hoy y siempre?",
+      boton: "Sí, para siempre ♥"
+    },
+    cierre_fijo: "Gracias por ser mi esposa, mi compañera, mi hogar. Feliz aniversario."
+  }
+};
+
+// Revisa si HOY (la fecha real del celular, no el ciclo de 90 días) es
+// uno de los dos días especiales.
+function obtenerDiaEspecialDeHoy() {
+  const ahora = new Date();
+  // Sin padStart (no lo soportan navegadores algo antiguos): se rellena a mano.
+  const mesNum = ahora.getMonth() + 1;
+  const diaNum = ahora.getDate();
+  const mm = (mesNum < 10 ? "0" : "") + mesNum;
+  const dd = (diaNum < 10 ? "0" : "") + diaNum;
+  return DIAS_ESPECIALES[mm + "-" + dd] || null;
+}
+
+
 function obtenerRecuerdoDeHoy() {
+  const especial = obtenerDiaEspecialDeHoy();
+  const normal = obtenerRecuerdoDeLaRotacion();
+
+  if (especial) {
+    // Red de seguridad: si las fotos del día especial todavía son
+    // marcadores sin reemplazar (por ejemplo, llegó el 6 de octubre y
+    // aún no las habías puesto), se usan las fotos del recuerdo que
+    // tocaba ese día. Así ella igual ve la carta y el tema especial,
+    // nunca imágenes rotas.
+    const fotosReales = especial.fotos.filter(function (f) {
+      return f.indexOf("PEGA_AQUI") !== 0;
+    });
+    if (fotosReales.length === 0) {
+      const copia = {};
+      for (const clave in especial) {
+        if (Object.prototype.hasOwnProperty.call(especial, clave)) {
+          copia[clave] = especial[clave];
+        }
+      }
+      copia.fotos = normal.fotos;
+      return copia;
+    }
+    // Si solo algunas están puestas, se muestran únicamente esas
+    if (fotosReales.length !== especial.fotos.length) {
+      const copia = {};
+      for (const clave in especial) {
+        if (Object.prototype.hasOwnProperty.call(especial, clave)) {
+          copia[clave] = especial[clave];
+        }
+      }
+      copia.fotos = fotosReales;
+      return copia;
+    }
+    return especial;
+  }
+
+  return normal;
+}
+
+function obtenerRecuerdoDeLaRotacion() {
   const inicio = new Date(FECHA_INICIO + "T00:00:00");
   const ahora = new Date();
   const msPorDia = 24 * 60 * 60 * 1000;
@@ -292,11 +413,14 @@ function esFamiliar(tipo) {
 }
 
 function obtenerPregunta(recuerdo) {
+  // Los días especiales traen su propia pregunta fija, no usan la rotación
+  if (recuerdo.pregunta_fija) return recuerdo.pregunta_fija;
   const pool = esFamiliar(recuerdo.tipo) ? PREGUNTAS_FAMILIA : PREGUNTAS_PAREJA;
   return pool[(recuerdo.dia - 1) % pool.length];
 }
 
 function obtenerCierre(recuerdo) {
+  if (recuerdo.cierre_fijo) return recuerdo.cierre_fijo;
   const pool = esFamiliar(recuerdo.tipo) ? CIERRES_FAMILIA : CIERRES_PAREJA;
   return pool[(recuerdo.dia - 1) % pool.length];
 }
@@ -342,11 +466,18 @@ function alCargarImagen(img, contenedor) {
     img.classList.add("loaded");
     if (contenedor) contenedor.classList.add("loaded");
   }
+  function marcarFallida() {
+    // Si una foto no carga (archivo faltante o sin señal), se oculta la
+    // imagen rota y el marco queda con su fondo color pergamino, en vez
+    // de mostrar el ícono gris de "imagen rota" del navegador.
+    img.classList.add("failed");
+    if (contenedor) contenedor.classList.add("loaded", "failed");
+  }
   if (img.complete && img.naturalWidth > 0) {
     marcarLista();
   } else {
     img.addEventListener("load", marcarLista, { once: true });
-    img.addEventListener("error", marcarLista, { once: true });
+    img.addEventListener("error", marcarFallida, { once: true });
   }
 }
 
@@ -485,6 +616,11 @@ function cargarFotoLightbox(alt) {
   const ligera = listaLightbox[indiceLightbox];
   quitarZoom();
 
+  // Reinicia la animación de entrada aunque ya tuviera la clase puesta
+  lightboxImg.classList.remove("entering");
+  void lightboxImg.offsetWidth; // fuerza un reflow para poder repetir la animación
+  lightboxImg.classList.add("entering");
+
   // Muestra primero la versión ligera (ya está en caché, aparece al instante)
   // y la cambia por la grande en cuanto termina de descargarse.
   lightboxImg.src = ligera;
@@ -548,10 +684,13 @@ lightboxImg.addEventListener("click", function (e) {
 
 // Teclado: Escape cierra, flechas navegan
 document.addEventListener("keydown", function (e) {
-  if (lightboxEl.hidden) return;
-  if (e.key === "Escape") cerrarLightbox();
-  else if (e.key === "ArrowLeft") moverLightbox(-1);
-  else if (e.key === "ArrowRight") moverLightbox(1);
+  if (!lightboxEl.hidden) {
+    if (e.key === "Escape") cerrarLightbox();
+    else if (e.key === "ArrowLeft") moverLightbox(-1);
+    else if (e.key === "ArrowRight") moverLightbox(1);
+    return;
+  }
+  if (!videoModal.hidden && e.key === "Escape") cerrarVideo();
 });
 
 // Deslizar el dedo para cambiar de foto (solo si no está acercada)
@@ -606,10 +745,27 @@ function animarNumero(elemento, destino, duracion) {
    ===================================================== */
 let recuerdoDeHoy = null;
 
+// Cambia el ambiente visual del sitio si hoy es un día especial
+// (cumpleaños o aniversario), y lo deja normal cualquier otro día.
+function aplicarTemaDelDia(recuerdo) {
+  document.body.classList.remove("tema-cumpleanos", "tema-aniversario");
+  const banner = document.getElementById("special-banner");
+
+  if (recuerdo.tema) {
+    document.body.classList.add("tema-" + recuerdo.tema);
+    banner.textContent = recuerdo.banner_texto || "";
+    banner.hidden = !recuerdo.banner_texto;
+  } else {
+    banner.hidden = true;
+  }
+}
+
 function mostrarRegaloDeHoy() {
   recuerdoDeHoy = obtenerRecuerdoDeHoy();
   const pregunta = obtenerPregunta(recuerdoDeHoy);
   const cierre = obtenerCierre(recuerdoDeHoy);
+
+  aplicarTemaDelDia(recuerdoDeHoy);
 
   document.getElementById("memory-date").textContent = recuerdoDeHoy.fecha_memoria;
   document.getElementById("couple-names").textContent = NOMBRES_PAREJA;
@@ -634,7 +790,7 @@ function mostrarRegaloDeHoy() {
     splash.hidden = true;
     daily.hidden = false;
     daily.classList.add("reveal");
-  }, 520);
+  }, 440);
 }
 
 /* =====================================================
@@ -648,6 +804,15 @@ let reproducirEnCuantoEsteListo = false;
 
 function intentarReproducirCancion() {
   if (ytPlayer && ytPlayerListo && typeof ytPlayer.playVideo === "function") {
+    // Caso poco común: la canción tardó en cargar y ella ya avanzó hasta
+    // el video sorpresa antes de que arrancara. Si es así, que empiece
+    // directo en volumen bajo, para no taparle la narración justo al
+    // primer segundo.
+    if (videoModal && !videoModal.hidden && typeof ytPlayer.setVolume === "function") {
+      volumenMusicaAntesDelVideo =
+        typeof ytPlayer.getVolume === "function" ? ytPlayer.getVolume() : 100;
+      ytPlayer.setVolume(VOLUMEN_MUSICA_CON_VIDEO);
+    }
     ytPlayer.playVideo();
     muteToggle.hidden = false;
   } else {
@@ -722,6 +887,43 @@ function lanzarConfeti(origenEl) {
   }
 }
 
+// ---------- Lluvia de corazones rojos, cayendo desde arriba ----------
+function lanzarLluviaDeCorazones() {
+  const prefiereQuieto = window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (prefiereQuieto) return;
+
+  const cantidad = 24;
+  // Todo en píxeles reales (no vh/vw): más confiable en móviles, donde
+  // esas unidades pueden recalcularse mal si la barra del navegador
+  // aparece o desaparece mientras corre la animación.
+  const anchoVentana = window.innerWidth || document.documentElement.clientWidth || 375;
+  const distanciaCaida = (window.innerHeight || document.documentElement.clientHeight || 800) + 130;
+
+  for (let i = 0; i < cantidad; i++) {
+    const pieza = document.createElement("span");
+    pieza.className = "heart-rain-piece";
+    pieza.textContent = "❤";
+    pieza.setAttribute("aria-hidden", "true");
+
+    const duracion = 2.5 + Math.random() * 2;     // 2.5s a 4.5s de caída
+    const retraso = Math.random() * 1.1;          // arrancan escalonados
+    const dx = Math.round(Math.random() * 90 - 45) + "px"; // leve zigzag
+    const rot = Math.round(Math.random() * 260 - 130) + "deg";
+
+    pieza.style.left = Math.round(Math.random() * anchoVentana) + "px";
+    pieza.style.fontSize = (15 + Math.random() * 17) + "px";
+    pieza.style.animationDuration = duracion + "s";
+    pieza.style.animationDelay = retraso + "s";
+    pieza.style.setProperty("--dx", dx);
+    pieza.style.setProperty("--fall", distanciaCaida + "px");
+    pieza.style.setProperty("--rot", rot);
+
+    document.body.appendChild(pieza);
+    setTimeout(function () { pieza.remove(); }, (duracion + retraso) * 1000 + 200);
+  }
+}
+
 /* =====================================================
    Interacción
    ===================================================== */
@@ -734,7 +936,9 @@ document.getElementById("open-gift").addEventListener("click", function (e) {
   intentarReproducirCancion();
 
   e.currentTarget.disabled = true;
-  setTimeout(mostrarRegaloDeHoy, 240);
+  // Se llama de inmediato (no con retraso) para que el desvanecimiento
+  // arranque en el mismo instante del toque y se sienta fluido.
+  mostrarRegaloDeHoy();
 });
 
 // ---------- 2. Abrir el sobre ----------
@@ -766,6 +970,7 @@ document.getElementById("confirm-btn").addEventListener("click", function (e) {
   e.currentTarget.disabled = true;
   finalWrap.hidden = false;
   document.getElementById("footer-note").hidden = false;
+  lanzarLluviaDeCorazones();
 
   const { años, meses, dias } = calcularTiempoJuntos(FECHA_RELACION);
   // Pequeña espera para que la animación arranque cuando ya está a la vista
@@ -786,6 +991,76 @@ document.getElementById("final-photo").addEventListener("click", function (e) {
   abrirLightbox(0, [e.currentTarget.getAttribute("src")], e.currentTarget.alt);
 });
 
+/* =====================================================
+   Reproductor de video — "Tengo una sorpresa más"
+   ===================================================== */
+const videoModal = document.getElementById("video-modal");
+const videoPlayer = document.getElementById("video-player");
+let ultimoFocoVideo = null;
+
+// Guarda el volumen que tenía la canción antes de bajarla, para
+// devolverla exactamente a ese nivel al cerrar el video.
+let volumenMusicaAntesDelVideo = null;
+
+function abrirVideo() {
+  ultimoFocoVideo = document.activeElement;
+  videoModal.hidden = false;
+  document.body.classList.add("lightbox-open"); // reutiliza el mismo bloqueo de scroll
+
+  // Se baja el volumen de la canción (no se detiene) para que se
+  // escuche bien lo que dices en el video, sin perder el ambiente
+  // de la música de fondo. Solo si de verdad estaba sonando.
+  if (ytPlayer && ytPlayerListo && typeof ytPlayer.getPlayerState === "function") {
+    if (ytPlayer.getPlayerState() === 1 /* YT.PlayerState.PLAYING */ &&
+        typeof ytPlayer.setVolume === "function") {
+      volumenMusicaAntesDelVideo =
+        typeof ytPlayer.getVolume === "function" ? ytPlayer.getVolume() : 100;
+      ytPlayer.setVolume(VOLUMEN_MUSICA_CON_VIDEO);
+    }
+  }
+
+  // Se llama aquí, dentro del propio toque del usuario: es el momento en
+  // que el navegador garantiza permitir la reproducción con sonido.
+  const intento = videoPlayer.play();
+  if (intento && typeof intento.catch === "function") {
+    intento.catch(function () {
+      // Si el navegador igual lo bloquea, ella puede darle play con los
+      // controles nativos del reproductor — no pasa nada grave.
+    });
+  }
+
+  document.getElementById("video-close").focus();
+}
+
+function cerrarVideo() {
+  videoPlayer.pause();
+  videoModal.hidden = true;
+  document.body.classList.remove("lightbox-open");
+
+  // La canción vuelve exactamente al volumen que tenía antes del video,
+  // solo si fue este video quien se lo bajó (si ella la había silenciado
+  // antes a propósito, se queda como estaba).
+  if (volumenMusicaAntesDelVideo !== null &&
+      ytPlayer && typeof ytPlayer.setVolume === "function") {
+    ytPlayer.setVolume(volumenMusicaAntesDelVideo);
+  }
+  volumenMusicaAntesDelVideo = null;
+
+  if (ultimoFocoVideo && typeof ultimoFocoVideo.focus === "function") {
+    ultimoFocoVideo.focus();
+  }
+}
+
+document.getElementById("open-video").addEventListener("click", abrirVideo);
+document.getElementById("video-close").addEventListener("click", cerrarVideo);
+
+// Tocar el fondo oscuro también cierra el video
+videoModal.addEventListener("click", function (e) {
+  if (e.target === videoModal || e.target.classList.contains("video-stage")) {
+    cerrarVideo();
+  }
+});
+
 // ---------- 4. "Verlo de nuevo" ----------
 function reiniciarRegalo() {
   const splash = document.getElementById("splash");
@@ -802,6 +1077,9 @@ function reiniciarRegalo() {
   splash.classList.remove("hiding");
   document.getElementById("open-gift").disabled = false;
 
+  document.body.classList.remove("tema-cumpleanos", "tema-aniversario");
+  document.getElementById("special-banner").hidden = true;
+
   envelopeWrap.hidden = false;
   envelopeWrap.classList.remove("opening", "opened");
   sealBtn.classList.remove("breaking");
@@ -811,6 +1089,10 @@ function reiniciarRegalo() {
   letterWrap.classList.remove("emerge");
   finalWrap.hidden = true;
   document.getElementById("footer-note").hidden = true;
+
+  // Si el video quedó abierto, se cierra y vuelve al inicio
+  if (!videoModal.hidden) cerrarVideo();
+  try { videoPlayer.currentTime = 0; } catch (err) { /* aún no había cargado, no pasa nada */ }
   document.getElementById("confirm-btn").disabled = false;
 
   // Contador y carrusel a cero

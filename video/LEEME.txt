@@ -1,0 +1,8 @@
+Coloca aquí tu video con el nombre exacto: sorpresa.mp4
+
+Recomendaciones:
+- Formato MP4 (compatible con cualquier celular).
+- Resolución 720p es más que suficiente para verse nítido en pantalla.
+- Si tu video pesa más de 60-80 MB, considera comprimirlo (por ejemplo con
+  HandBrake, gratis) para que no haga lento el resto del sitio al subirlo
+  a GitHub.
