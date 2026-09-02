@@ -55,11 +55,9 @@ La foto de cierre (la que acompaña al contador) reutiliza automáticamente la p
 
 El **6 de octubre** (su cumpleaños) y el **14 de diciembre** (su aniversario de bodas) tienen su propio contenido y su propio ambiente visual (colores distintos, un mensaje especial arriba) — se activan solos cada año, automáticamente, sin que tengas que hacer nada más que completar sus fotos.
 
-Busca `DIAS_ESPECIALES` en `app.js` y reemplaza estos **6 placeholders nuevos** (3 fotos por cada fecha):
-- `PEGA_AQUI_TU_FOTO_CUMPLE_1`, `_2`, `_3`
-- `PEGA_AQUI_TU_FOTO_ANIV_1`, `_2`, `_3`
+Ambas fechas ya están completas, cada una con 3 fotos en este orden: la tarjeta del día, una foto de los dos, y una de los tres con Emi. Ya escribí también una carta especial para cada fecha (editable en `DIAS_ESPECIALES` dentro de `app.js` si quieres cambiar el texto).
 
-Ya escribí una carta especial para cada fecha (editable ahí mismo si quieres cambiar el texto). Estos dos días siempre reemplazan lo que le tocaría por la rotación normal de los 45 recuerdos — el resto del año sigue funcionando exactamente igual.
+Estos dos días siempre reemplazan lo que le tocaría por la rotación normal de los 45 recuerdos — el resto del año sigue funcionando exactamente igual.
 
 ### Sobre el tamaño/calidad de las fotos
 Cualquier tamaño funciona (el sitio recorta automáticamente al marco), pero para que cargue rápido y se vea nítido:

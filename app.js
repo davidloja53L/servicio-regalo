@@ -70,17 +70,17 @@ const RECUERDOS = [
     fotos: ["fotos/dia06_1.jpg", "fotos/dia06_2.jpg"],
     carta: "Hay algo en ver cómo cuidas a {{HIJO}} que me enamora otra vez, cada vez. Eres la mamá que siempre soñé para nuestros hijos, mucho antes de conocerte." },
 
-  { dia: 7, tipo: "pareja", fecha_memoria: "Papallacta",
-    fotos: ["fotos/dia07_1.jpg", "fotos/dia07_2.jpg", "fotos/dia13_1.jpg"],
-    carta: "Entre el vapor del agua caliente y el frío de la montaña, te miré y pensé: quiero envejecer contigo, quiero mil viajes más como este. Sigo pensando exactamente lo mismo." },
+  { dia: 7, tipo: "familia", fecha_memoria: "Con los nuestros",
+    fotos: ["fotos/dia07_1.jpg", "fotos/dia13_1.jpg"],
+    carta: "Me encanta verte con los tuyos: cómo te ríes distinto, cómo te relajas, cómo se te nota que estás en casa. Gracias por abrirme las puertas de tu familia y hacer que también se sienta mía." },
 
   { dia: 8, tipo: "hijo", fecha_memoria: "Nuestra familia",
     fotos: ["fotos/dia08_1.jpg", "fotos/dia08_2.jpg"],
     carta: "Ver a {{HIJO}} crecer, contigo a mi lado, sigue siendo la historia más bonita que me ha tocado vivir." },
 
-  { dia: 9, tipo: "pareja", fecha_memoria: "Nueva York, Times Square",
+  { dia: 9, tipo: "pareja", fecha_memoria: "Nueva York, luces de invierno",
     fotos: ["fotos/dia09_1.jpg", "fotos/dia09_2.jpg"],
-    carta: "Entre tantas luces de Times Square, ninguna brillaba tanto como tu sonrisa esa noche. Contigo hasta el caos de una ciudad enorme se sintió tranquilo, porque tú eres mi lugar seguro." },
+    carta: "Entre tantas luces encendidas esa noche, ninguna brillaba tanto como tu sonrisa. Contigo hasta el caos de una ciudad enorme se sintió tranquilo, porque tú eres mi lugar seguro." },
 
   { dia: 10, tipo: "hijo", fecha_memoria: "Nuestra familia",
     fotos: ["fotos/dia10_1.jpg", "fotos/dia10_2.jpg"],
@@ -94,7 +94,7 @@ const RECUERDOS = [
     fotos: ["fotos/dia12_1.jpg", "fotos/dia12_2.jpg"],
     carta: "Cuando {{HIJO}} se queda dormido en tus brazos, entiendo que encontré, sin buscarlo, la imagen exacta de lo que siempre quise para mi vida: ustedes dos." },
 
-  { dia: 13, tipo: "pareja", fecha_memoria: "Papallacta, entre la neblina",
+  { dia: 13, tipo: "pareja", fecha_memoria: "Entre montañas y neblina",
     fotos: ["fotos/dia13_1.jpg", "fotos/dia13_2.jpg", "fotos/dia13_3.jpg"],
     carta: "Nos perdimos entre la neblina buscando el camino de regreso, y en medio de esa niebla, entre risas nerviosas, te quise un poco más. Contigo perderme nunca dio miedo." },
 
@@ -118,9 +118,9 @@ const RECUERDOS = [
     fotos: ["fotos/dia18_1.jpg", "fotos/dia18_2.jpg"],
     carta: "Cuando {{HIJO}} dice tu nombre antes que cualquier otra palabra, entiendo por qué: tú eres, para los dos, el lugar más seguro que conocemos." },
 
-  { dia: 19, tipo: "pareja", fecha_memoria: "Papallacta, agua caliente y manos frías",
+  { dia: 19, tipo: "pareja", fecha_memoria: "Galápagos",
     fotos: ["fotos/dia19_1.jpg", "fotos/dia19_2.jpg"],
-    carta: "Tomé tu mano dentro del agua caliente mientras el viento frío nos rodeaba, y sentí que no había lugar más seguro en el mundo que estar cerca de ti." },
+    carta: "Entre el mar turquesa y ese silencio enorme de las islas, te miré y pensé: quiero envejecer contigo, quiero mil viajes más como este. Sigo pensando exactamente lo mismo." },
 
   { dia: 20, tipo: "hijo", fecha_memoria: "Nuestra familia",
     fotos: ["fotos/dia20_1.jpg", "fotos/dia20_2.jpg"],
@@ -134,9 +134,9 @@ const RECUERDOS = [
     fotos: ["fotos/dia22_1.jpg", "fotos/dia22_2.jpg"],
     carta: "{{HIJO}} tiene tu misma terquedad, y aunque a veces sea un dolor de cabeza, en el fondo me encanta ver cuánto se parece a ti." },
 
-  { dia: 23, tipo: "pareja", fecha_memoria: "Nueva York, un café cualquiera",
+  { dia: 23, tipo: "pareja", fecha_memoria: "Nueva York, Times Square",
     fotos: ["fotos/dia23_1.jpg", "fotos/dia23_2.jpg"],
-    carta: "Cualquier café sabe mejor si lo comparto contigo, incluso los que no nos gustaron. Nueva York nos regaló un montón de esas tardes pequeñas que hoy recuerdo con una sonrisa." },
+    carta: "Entre tanta gente, tanto letrero y tanto ruido, yo solo quería mirarte a ti. Nueva York nos regaló un montón de momentos así, que hoy recuerdo con una sonrisa." },
 
   { dia: 24, tipo: "hijo", fecha_memoria: "Nuestra familia",
     fotos: ["fotos/dia24_1.jpg", "fotos/dia24_2.jpg"],
@@ -150,7 +150,7 @@ const RECUERDOS = [
     fotos: ["fotos/dia26_1.jpg", "fotos/dia26_2.jpg"],
     carta: "Cuando {{HIJO}} se enferma y no duermes para cuidarlo, entiendo, otra vez, que tienes un corazón enorme, y que tuve mucha suerte de que decidieras compartirlo conmigo." },
 
-  { dia: 27, tipo: "pareja", fecha_memoria: "Papallacta, atardecer",
+  { dia: 27, tipo: "pareja", fecha_memoria: "Frente al mar",
     fotos: ["fotos/dia27_1.jpg", "fotos/dia13_2.jpg", "fotos/dia13_3.jpg"],
     carta: "El atardecer fue precioso, pero verte a ti mirarlo, con esa calma que solo tienes tú, fue lo más bonito de esa tarde entera." },
 
@@ -158,9 +158,9 @@ const RECUERDOS = [
     fotos: ["fotos/dia28_1.jpg", "fotos/dia28_2.jpg"],
     carta: "Enseñarle a {{HIJO}} a andar en bicicleta contigo detrás, gritando de emoción los dos, es de esos recuerdos que sé que voy a atesorar toda la vida." },
 
-  { dia: 29, tipo: "pareja", fecha_memoria: "Nueva York, andando en metro",
+  { dia: 29, tipo: "pareja", fecha_memoria: "Nueva York, el viaje",
     fotos: ["fotos/dia29_1.jpg", "fotos/dia29_2.jpg"],
-    carta: "Nos perdimos en el metro más de una vez, y en vez de estresarnos, terminamos riéndonos hasta que nos dolía el estómago. Contigo hasta perderse es un buen plan." },
+    carta: "Desde la espera en el aeropuerto hasta las bobadas que hicimos allá, todo ese viaje fue nuestro. Contigo hasta las esperas largas terminan siendo parte del recuerdo bonito." },
 
   { dia: 30, tipo: "hijo", fecha_memoria: "Nuestra familia",
     fotos: ["fotos/dia30_1.jpg", "fotos/dia30_2.jpg"],
@@ -303,9 +303,9 @@ const DIAS_ESPECIALES = {
     banner_texto: "🎂 Feliz cumpleaños 🎂",
     fecha_memoria: "Hoy es tu día",
     fotos: [
-      "PEGA_AQUI_TU_FOTO_CUMPLE_1",
-      "PEGA_AQUI_TU_FOTO_CUMPLE_2",
-      "PEGA_AQUI_TU_FOTO_CUMPLE_3"
+      "fotos/cumple_1.jpg",   // la tarjeta de cumpleaños
+      "fotos/dia25_1.jpg",    // los dos, abrazados en el mirador
+      "fotos/dia16_1.jpg"     // los tres, en la playa junto al faro
     ],
     carta:
       "Hoy no es un día cualquiera: es el día en que naciste tú, la persona " +
@@ -328,9 +328,9 @@ const DIAS_ESPECIALES = {
     banner_texto: "💍 Feliz aniversario 💍",
     fecha_memoria: "Nuestro aniversario de bodas",
     fotos: [
-      "PEGA_AQUI_TU_FOTO_ANIV_1",
-      "PEGA_AQUI_TU_FOTO_ANIV_2",
-      "PEGA_AQUI_TU_FOTO_ANIV_3"
+      "fotos/aniv_1.jpg",     // la tarjeta de aniversario
+      "fotos/dia01_1.jpg",    // los dos, la cena romántica del "TE AMO"
+      "fotos/dia12_1.jpg"     // los tres, elegantes, en la iglesia del vitral
     ],
     carta:
       "El día que nos casamos prometimos algo para siempre, y hoy, cada " +
