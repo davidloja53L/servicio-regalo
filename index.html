@@ -52,18 +52,29 @@
     <p class="tagline reveal-2">Para el amor de mi vida</p>
 
     <button id="open-gift" class="heart-button reveal-3" type="button" aria-label="Te amo, Dani — toca para abrir tu regalo">
+      <span class="heart-halo" aria-hidden="true"></span>
       <svg class="heart-svg" viewBox="0 0 100 92" aria-hidden="true" focusable="false">
         <defs>
-          <linearGradient id="heartFillGrad" x1="0" y1="0" x2="0.2" y2="1">
-            <stop offset="0%"   stop-color="#C0713F" />
-            <stop offset="45%"  stop-color="#A85C34" />
-            <stop offset="100%" stop-color="#803E20" />
+          <linearGradient id="heartFillGrad" x1="0.15" y1="0" x2="0.85" y2="1">
+            <stop offset="0%"   stop-color="#D14E63" />
+            <stop offset="38%"  stop-color="#A82942" />
+            <stop offset="72%"  stop-color="#7A1730" />
+            <stop offset="100%" stop-color="#520D20" />
           </linearGradient>
+          <radialGradient id="heartSheen" cx="0.32" cy="0.24" r="0.55">
+            <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.55" />
+            <stop offset="55%"  stop-color="#FFFFFF" stop-opacity="0.12" />
+            <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+          </radialGradient>
         </defs>
         <path
           class="heart-path"
           d="M50 89 C 19 66, 0 45, 0 27 C 0 10, 14 0, 29 0 C 41 0, 50 9, 50 17 C 50 9, 59 0, 71 0 C 86 0, 100 10, 100 27 C 100 45, 81 66, 50 89 Z"
           fill="url(#heartFillGrad)" />
+        <path
+          class="heart-sheen"
+          d="M50 89 C 19 66, 0 45, 0 27 C 0 10, 14 0, 29 0 C 41 0, 50 9, 50 17 C 50 9, 59 0, 71 0 C 86 0, 100 10, 100 27 C 100 45, 81 66, 50 89 Z"
+          fill="url(#heartSheen)" />
       </svg>
       <span class="heart-text">Te amo,<br /><span id="wife-name-btn"></span></span>
     </button>

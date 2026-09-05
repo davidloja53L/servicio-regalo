@@ -46,185 +46,188 @@ const VOLUMEN_MUSICA_CON_VIDEO = 15;
    (día sí, día no), y el día 30 cierra con un mensaje de familia completa.
    ===================================================== */
 const RECUERDOS = [
+  /* ===== PAREJA ===== */
   { dia: 1, tipo: "pareja", fecha_memoria: "El día que empezó todo",
     fotos: ["fotos/dia01_1.jpg", "fotos/dia01_2.jpg"],
-    carta: "Hace tiempo dejé de buscar la felicidad en otro lugar, porque la encontré la primera vez que te vi sonreír. Hoy, como cada día, elijo quedarme contigo, con nuestra historia y con todo lo que aún nos falta por vivir juntos." },
-
-  { dia: 2, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia02_1.jpg", "fotos/dia02_2.jpg"],
-    carta: "Verte convertida en mamá de {{HIJO}} fue ver una versión tuya que, sin saberlo, ya amaba de antes. Gracias por darnos esta familia que hoy es mi lugar favorito en el mundo." },
+    carta: "Preparé todo con las manos temblando, sin saber si lo estaba haciendo bien. Tú llegaste y todo encajó. Si volviera a empezar, volvería a elegir exactamente este camino, contigo." },
 
   { dia: 3, tipo: "pareja", fecha_memoria: "Nueva York, invierno",
-    fotos: ["fotos/dia03_1.jpg", "fotos/dia03_2.jpg", "fotos/dia03_3.jpg"],
+    fotos: ["fotos/dia03_1.jpg", "fotos/dia03_2.jpg"],
     carta: "Nueva York fue frío, pero tu mano en la mía lo volvió cálido. Ese viaje me enseñó que no necesito un lugar perfecto, solo necesito estar contigo para que cualquier ciudad se sienta como el lugar correcto." },
-
-  { dia: 4, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia04_1.jpg", "fotos/dia04_2.jpg"],
-    carta: "{{HIJO}} tiene tu misma forma de reírse con todo el cuerpo, y cada vez que lo veo hacerlo, te veo un poco a ti también. Gracias por darme dos personas a quienes amar así de fuerte." },
 
   { dia: 5, tipo: "pareja", fecha_memoria: "Un domingo cualquiera",
     fotos: ["fotos/dia05_1.jpg", "fotos/dia05_2.jpg"],
-    carta: "Hay domingos que no tienen nada especial y aun así se vuelven mis favoritos, solo porque los paso a tu lado. Gracias por convertir lo simple en algo que atesoro." },
+    carta: "Sin planes, sin apuro, solo nosotros dos y algo rico de comer. Los domingos contigo me enseñaron que la felicidad casi nunca es un evento grande: casi siempre es esto." },
 
-  { dia: 6, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia06_1.jpg", "fotos/dia06_2.jpg"],
-    carta: "Hay algo en ver cómo cuidas a {{HIJO}} que me enamora otra vez, cada vez. Eres la mamá que siempre soñé para nuestros hijos, mucho antes de conocerte." },
-
-  { dia: 7, tipo: "familia", fecha_memoria: "Con los nuestros",
-    fotos: ["fotos/dia07_1.jpg", "fotos/dia13_1.jpg"],
-    carta: "Me encanta verte con los tuyos: cómo te ríes distinto, cómo te relajas, cómo se te nota que estás en casa. Gracias por abrirme las puertas de tu familia y hacer que también se sienta mía." },
-
-  { dia: 8, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia08_1.jpg", "fotos/dia08_2.jpg"],
-    carta: "Ver a {{HIJO}} crecer, contigo a mi lado, sigue siendo la historia más bonita que me ha tocado vivir." },
-
-  { dia: 9, tipo: "pareja", fecha_memoria: "Nueva York, luces de invierno",
-    fotos: ["fotos/dia09_1.jpg", "fotos/dia09_2.jpg"],
+  { dia: 9, tipo: "pareja", fecha_memoria: "Nueva York de noche",
+    fotos: ["fotos/dia09_1.jpg", "fotos/dia33_3.jpg"],
     carta: "Entre tantas luces encendidas esa noche, ninguna brillaba tanto como tu sonrisa. Contigo hasta el caos de una ciudad enorme se sintió tranquilo, porque tú eres mi lugar seguro." },
 
-  { dia: 10, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia10_1.jpg", "fotos/dia10_2.jpg"],
-    carta: "Algún día {{HIJO}} va a entender todo lo que hiciste, todas las noches sin dormir, todo el amor silencioso. Mientras tanto, quiero que sepas que yo sí lo veo, cada día." },
-
-  { dia: 11, tipo: "pareja", fecha_memoria: "Nuestra cocina",
-    fotos: ["fotos/dia11_1.jpg", "fotos/dia11_2.jpg"],
-    carta: "Se nos quema el arroz casi siempre, y aun así esas noches en la cocina son de las que más disfruto. Contigo hasta los errores se sienten como aventuras compartidas." },
-
-  { dia: 12, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia12_1.jpg", "fotos/dia12_2.jpg"],
-    carta: "Cuando {{HIJO}} se queda dormido en tus brazos, entiendo que encontré, sin buscarlo, la imagen exacta de lo que siempre quise para mi vida: ustedes dos." },
+  { dia: 11, tipo: "pareja", fecha_memoria: "Nuestra mesa",
+    fotos: ["fotos/dia11_1.jpg", "fotos/dia35_1.jpg"],
+    carta: "Nada del otro mundo: una mesa, algo de comer, y horas hablando de cualquier cosa. Contigo aprendí que las mejores conversaciones pasan en los lugares más simples." },
 
   { dia: 13, tipo: "pareja", fecha_memoria: "Entre montañas y neblina",
-    fotos: ["fotos/dia13_1.jpg", "fotos/dia13_2.jpg", "fotos/dia13_3.jpg"],
+    fotos: ["fotos/dia13_1.jpg", "fotos/dia13_3.jpg"],
     carta: "Nos perdimos entre la neblina buscando el camino de regreso, y en medio de esa niebla, entre risas nerviosas, te quise un poco más. Contigo perderme nunca dio miedo." },
 
-  { dia: 14, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia14_1.jpg", "fotos/dia14_2.jpg"],
-    carta: "Nunca me cansaré de verte inventando excusas para que {{HIJO}} coma un bocado más de verduras. Eres divertidísima incluso cuando pierdes esa batalla." },
+  { dia: 15, tipo: "pareja", fecha_memoria: "Cuenca, entre iglesias y tejados",
+    fotos: ["fotos/dia15_2.jpg", "fotos/dia32_2.jpg"],
+    carta: "Caminamos esa ciudad sin mapa, parando en cada esquina que te gustaba. Ver el mundo al ritmo tuyo sigue siendo una de mis cosas favoritas de la vida." },
 
-  { dia: 15, tipo: "pareja", fecha_memoria: "Una llamada en la noche",
-    fotos: ["fotos/dia15_1.jpg", "fotos/dia15_2.jpg"],
-    carta: "Si el amor tuviera un sonido, sería tu voz contándome cómo te fue el día, con esos detalles que solo tú sabes hacer interesantes. Gracias por compartir tu día a día conmigo." },
-
-  { dia: 16, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia16_1.jpg", "fotos/dia16_2.jpg"],
-    carta: "Los domingos en el parque, con {{HIJO}} corriendo entre los dos, se han vuelto mi versión favorita de la felicidad." },
-
-  { dia: 17, tipo: "pareja", fecha_memoria: "Un día de trabajo pesado",
-    fotos: ["fotos/dia17_1.jpg", "fotos/dia17_2.jpg"],
-    carta: "Hay días pesados en los que lo único que me sostiene es saber que al final voy a verte. Pensar en ti sigue siendo mi manera favorita de aligerar cualquier carga." },
-
-  { dia: 18, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia18_1.jpg", "fotos/dia18_2.jpg"],
-    carta: "Cuando {{HIJO}} dice tu nombre antes que cualquier otra palabra, entiendo por qué: tú eres, para los dos, el lugar más seguro que conocemos." },
+  { dia: 17, tipo: "pareja", fecha_memoria: "En lo alto de Nueva York",
+    fotos: ["fotos/dia17_1.jpg", "fotos/dia17_2.jpg", "fotos/dia41_2.jpg"],
+    carta: "Subimos altísimo para ver la ciudad entera, y yo terminé mirándote a ti más que al paisaje. Contigo hasta las vistas más impresionantes tienen competencia." },
 
   { dia: 19, tipo: "pareja", fecha_memoria: "Galápagos",
-    fotos: ["fotos/dia19_1.jpg", "fotos/dia19_2.jpg"],
+    fotos: ["fotos/dia19_1.jpg", "fotos/dia19_2.jpg", "fotos/dia21_2.jpg"],
     carta: "Entre el mar turquesa y ese silencio enorme de las islas, te miré y pensé: quiero envejecer contigo, quiero mil viajes más como este. Sigo pensando exactamente lo mismo." },
 
-  { dia: 20, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia20_1.jpg", "fotos/dia20_2.jpg"],
-    carta: "Verte leerle un cuento a {{HIJO}} cada noche, con esas voces que inventas para cada personaje, es de las cosas más bonitas que pasan en esta casa." },
-
-  { dia: 21, tipo: "pareja", fecha_memoria: "Antes de dormir",
-    fotos: ["fotos/dia21_1.jpg", "fotos/dia21_2.jpg"],
-    carta: "Escucharte contar tu día sigue siendo mi parte favorita de las veinticuatro horas. No importa cuántos años pasen, espero seguir queriendo escucharte cada noche." },
-
-  { dia: 22, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia22_1.jpg", "fotos/dia22_2.jpg"],
-    carta: "{{HIJO}} tiene tu misma terquedad, y aunque a veces sea un dolor de cabeza, en el fondo me encanta ver cuánto se parece a ti." },
+  { dia: 21, tipo: "pareja", fecha_memoria: "Nuestras noches",
+    fotos: ["fotos/dia21_1.jpg", "fotos/dia41_1.jpg", "fotos/dia15_1.jpg"],
+    carta: "Esas noches en las que no hacíamos nada especial, solo estar cerca, hablar bajito y reírnos de tonterías. Son las que más extraño cuando pasas el día fuera." },
 
   { dia: 23, tipo: "pareja", fecha_memoria: "Nueva York, Times Square",
     fotos: ["fotos/dia23_1.jpg", "fotos/dia23_2.jpg"],
     carta: "Entre tanta gente, tanto letrero y tanto ruido, yo solo quería mirarte a ti. Nueva York nos regaló un montón de momentos así, que hoy recuerdo con una sonrisa." },
 
-  { dia: 24, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia24_1.jpg", "fotos/dia24_2.jpg"],
-    carta: "El refrigerador está lleno de dibujos de {{HIJO}}, y aun así siempre encuentras espacio para el próximo. Así eres tú con el amor: nunca se te acaba el espacio." },
-
   { dia: 25, tipo: "pareja", fecha_memoria: "Un abrazo largo",
     fotos: ["fotos/dia25_1.jpg", "fotos/dia25_2.jpg"],
-    carta: "Hay abrazos que dicen más que mil palabras, y los tuyos siempre supieron decir exactamente lo que yo necesitaba escuchar, incluso sin abrir la boca." },
-
-  { dia: 26, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia26_1.jpg", "fotos/dia26_2.jpg"],
-    carta: "Cuando {{HIJO}} se enferma y no duermes para cuidarlo, entiendo, otra vez, que tienes un corazón enorme, y que tuve mucha suerte de que decidieras compartirlo conmigo." },
+    carta: "Ese abrazo que no tenía apuro ni motivo, solo ganas de quedarnos ahí. Todavía hoy, cuando me abrazas así, se me acomoda todo por dentro." },
 
   { dia: 27, tipo: "pareja", fecha_memoria: "Frente al mar",
-    fotos: ["fotos/dia27_1.jpg", "fotos/dia13_2.jpg", "fotos/dia13_3.jpg"],
-    carta: "El atardecer fue precioso, pero verte a ti mirarlo, con esa calma que solo tienes tú, fue lo más bonito de esa tarde entera." },
-
-  { dia: 28, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia28_1.jpg", "fotos/dia28_2.jpg"],
-    carta: "Enseñarle a {{HIJO}} a andar en bicicleta contigo detrás, gritando de emoción los dos, es de esos recuerdos que sé que voy a atesorar toda la vida." },
+    fotos: ["fotos/dia27_1.jpg", "fotos/dia26_2.jpg", "fotos/dia37_2.jpg"],
+    carta: "El mar fue precioso, pero verte a ti mirarlo, con esa calma que solo tienes tú, fue lo más bonito de esa tarde entera." },
 
   { dia: 29, tipo: "pareja", fecha_memoria: "Nueva York, el viaje",
     fotos: ["fotos/dia29_1.jpg", "fotos/dia29_2.jpg"],
     carta: "Desde la espera en el aeropuerto hasta las bobadas que hicimos allá, todo ese viaje fue nuestro. Contigo hasta las esperas largas terminan siendo parte del recuerdo bonito." },
 
-  { dia: 30, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia30_1.jpg", "fotos/dia30_2.jpg"],
-    carta: "Ver cómo {{HIJO}} corre a abrazarte apenas te ve después de un día fuera es de esas escenas que no me cansaré de presenciar. Ese recibimiento tuyo — sonrisa enorme, brazos abiertos — es puro tú." },
-
-  { dia: 31, tipo: "pareja", fecha_memoria: "La primera vez que te dije te amo",
+  { dia: 31, tipo: "pareja", fecha_memoria: "De fiesta contigo",
     fotos: ["fotos/dia31_1.jpg", "fotos/dia31_2.jpg"],
-    carta: "Recuerdo la primera vez que te dije que te amaba: me temblaba la voz, y tú solo sonreíste como si ya lo supieras. Han pasado años y ese temblor todavía aparece cuando te miro." },
+    carta: "Te vi reírte con todas tus ganas esa noche, sin preocuparte por nada, y pensé que así es como quiero verte siempre: libre, feliz, y a mi lado." },
 
-  { dia: 32, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia32_1.jpg", "fotos/dia32_2.jpg"],
-    carta: "El primer día de escuela de {{HIJO}} lloraste más que él, y aun así fuiste la primera en decirle lo valiente que había sido. Así eres tú: fuerte incluso cuando te tiembla el corazón." },
+  { dia: 33, tipo: "pareja", fecha_memoria: "Luces de diciembre",
+    fotos: ["fotos/dia33_1.jpg", "fotos/dia32_1.jpg", "fotos/dia43_2.jpg"],
+    carta: "Diciembre siempre se siente distinto contigo: las luces, el frío, tu mano buscando la mía dentro del bolsillo. Es mi época favorita del año por razones que solo tienen que ver contigo." },
 
-  { dia: 33, tipo: "pareja", fecha_memoria: "Un baile sin música",
-    fotos: ["fotos/dia33_1.jpg", "fotos/dia33_2.jpg", "fotos/dia33_3.jpg"],
-    carta: "Bailamos en la cocina sin música real, solo tarareando, y aun así fue de los mejores bailes de mi vida. Contigo hasta el silencio suena bien." },
-
-  { dia: 34, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia34_1.jpg", "fotos/dia34_2.jpg"],
-    carta: "{{HIJO}} hace preguntas que no sé cómo responder, y verte inventar explicaciones tan pacientes me recuerda por qué eres exactamente la mamá que necesitaba tener." },
-
-  { dia: 35, tipo: "pareja", fecha_memoria: "Un martes cualquiera",
-    fotos: ["fotos/dia35_1.jpg", "fotos/dia35_2.jpg"],
-    carta: "Un martes cualquiera, sin nada especial en la agenda, y aun así elegiría repetirlo mil veces solo porque estuviste ahí." },
-
-  { dia: 36, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia36_1.jpg", "fotos/dia02_1.jpg", "fotos/dia02_2.jpg"],
-    carta: "Cada noche, antes de dormir, {{HIJO}} pide 'un ratito más' contigo, y cada noche se lo das, aunque estés cansada. Ese ratito extra dice todo lo que necesito saber sobre tu corazón." },
+  { dia: 35, tipo: "pareja", fecha_memoria: "Cenas con velas",
+    fotos: ["fotos/dia11_2.jpg", "fotos/dia43_1.jpg", "fotos/dia35_2.jpg"],
+    carta: "Me encanta preparar estas noches para ti: las velas, el postre, la carta escondida. Verte llegar y que se te ilumine la cara vale cada minuto de preparación." },
 
   { dia: 37, tipo: "pareja", fecha_memoria: "Un viaje en carretera",
-    fotos: ["fotos/dia37_1.jpg", "fotos/dia37_2.jpg"],
-    carta: "En ese viaje en carretera, con la música muy alta y las ventanas abiertas, entendí que no me importa el destino si el camino es contigo." },
+    fotos: ["fotos/dia37_1.jpg", "fotos/dia33_2.jpg"],
+    carta: "Con el viento en la cara y tú detrás de mí, agarrada fuerte. No sé a dónde íbamos ese día, pero sé exactamente con quién quiero ir siempre." },
 
-  { dia: 38, tipo: "hijo", fecha_memoria: "Nuestra familia",
+  { dia: 39, tipo: "pareja", fecha_memoria: "Paseando sin rumbo",
+    fotos: ["fotos/dia39_2.jpg", "fotos/dia39_3.jpg", "fotos/dia39_1.jpg"],
+    carta: "Ese día paramos en cada cosa rara que veíamos, solo porque sí. Contigo hasta los planes sin sentido terminan siendo los recuerdos que más se quedan." },
+
+  { dia: 41, tipo: "pareja", fecha_memoria: "Cosas curiosas que vimos juntos",
+    fotos: ["fotos/dia36_1.jpg", "fotos/dia34_2.jpg"],
+    carta: "Me gusta que te animes a todo, hasta a las cosas más raras, y que después nos riamos de lo ridículos que fuimos. Nunca me aburro contigo, ni un solo día." },
+
+  { dia: 43, tipo: "pareja", fecha_memoria: "Momentos de calma",
+    fotos: ["fotos/dia09_2.jpg", "fotos/dia13_2.jpg"],
+    carta: "Hay ratos en los que no hace falta decir nada, solo estar. Contigo el silencio nunca es incómodo: es de esas cosas que solo se logran con la persona correcta." },
+
+  /* ===== EMI Y FAMILIA ===== */
+  { dia: 2, tipo: "hijo", fecha_memoria: "Sus primeras comidas",
+    fotos: ["fotos/dia02_1.jpg", "fotos/dia02_2.jpg"],
+    carta: "Verlo descubrir cada sabor, con la cara embarrada y esa concentración total, es de las cosas más divertidas de ser papás. Gracias por tener tanta paciencia en cada comida." },
+
+  { dia: 4, tipo: "hijo", fecha_memoria: "Papá y su copia",
     fotos: ["fotos/dia04_1.jpg", "fotos/dia04_2.jpg"],
-    carta: "Salir a caminar los tres, sin ningún plan, sigue siendo de mis actividades favoritas — {{HIJO}} señalando cosas, tú riéndote de sus teorías sobre el mundo." },
+    carta: "Cada día se parece más a nosotros: tiene tu ternura y mi terquedad. Verlo crecer al lado tuyo es el proyecto más bonito en el que me he metido." },
 
-  { dia: 39, tipo: "pareja", fecha_memoria: "Una pelea tonta",
-    fotos: ["fotos/dia39_1.jpg", "fotos/dia39_2.jpg", "fotos/dia39_3.jpg"],
-    carta: "Discutimos por algo tan tonto que ya ni recuerdo qué fue, pero sí recuerdo que terminamos riéndonos de nosotros mismos. Contigo hasta pelear se siente ligero." },
-
-  { dia: 40, tipo: "hijo", fecha_memoria: "Nuestra familia",
+  { dia: 6, tipo: "hijo", fecha_memoria: "Su cumpleaños",
     fotos: ["fotos/dia06_1.jpg", "fotos/dia06_2.jpg"],
-    carta: "Te vi enseñarle a {{HIJO}} a atarse los zapatos, con toda la paciencia del mundo, repitiendo el mismo nudo veinte veces. Así enseñas tú: sin prisa, con amor de sobra." },
+    carta: "Otro año de {{HIJO}}, y otra vez tú detrás de todo: los globos, la torta, cada detalle pensado. Él no lo sabe todavía, pero tiene la mejor mamá del mundo." },
 
-  { dia: 41, tipo: "pareja", fecha_memoria: "Una mañana tranquila",
-    fotos: ["fotos/dia41_1.jpg", "fotos/dia41_2.jpg"],
-    carta: "Hay mañanas en las que te veo dormir un poco más de la cuenta, y en vez de despertarte, me quedo ahí, solo mirándote, agradecido de tenerte cerca." },
+  { dia: 8, tipo: "hijo", fecha_memoria: "El cumpleaños de Shrek",
+    fotos: ["fotos/dia08_2.jpg", "fotos/dia08_1.jpg"],
+    carta: "Nos disfrazamos los tres sin que nos diera vergüenza nada, solo para verlo feliz. Ese día entendí que contigo yo hago cualquier cosa con tal de que él tenga recuerdos así." },
 
-  { dia: 42, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia08_1.jpg", "fotos/dia08_2.jpg", "fotos/dia10_1.jpg"],
-    carta: "Cuando {{HIJO}} se cae y corre a tus brazos antes que a los míos, no siento celos — siento alivio de que tenga un lugar tan seguro al cual correr." },
+  { dia: 10, tipo: "hijo", fecha_memoria: "Globos y velitas",
+    fotos: ["fotos/dia10_1.jpg", "fotos/dia10_2.jpg"],
+    carta: "Cada cumpleaños de {{HIJO}} tiene tu sello en cada esquina. Gracias por convertir fechas normales en días que él va a recordar toda la vida." },
 
-  { dia: 43, tipo: "pareja", fecha_memoria: "Los detalles pequeños",
-    fotos: ["fotos/dia43_1.jpg", "fotos/dia43_2.jpg"],
-    carta: "Aprendí a quererte en los detalles pequeños: cómo ordenas tus cosas, cómo tarareas mientras cocinas, cómo te ríes antes de contar el chiste. Sigo aprendiendo, y me encanta." },
+  { dia: 12, tipo: "hijo", fecha_memoria: "El día que llegó",
+    fotos: ["fotos/dia12_2.jpg", "fotos/dia24_2.jpg"],
+    carta: "El día que nació {{HIJO}} te vi más fuerte que nunca. Ahí, agotada y feliz, con él en tus brazos, supe que no había mujer más valiente en el mundo que tú." },
 
-  { dia: 44, tipo: "hijo", fecha_memoria: "Nuestra familia",
-    fotos: ["fotos/dia10_2.jpg", "fotos/dia12_1.jpg"],
-    carta: "Verte con tu propia mamá cargando a {{HIJO}} me hizo pensar en todo lo que se hereda sin querer: la ternura, la paciencia, la forma de amar. Por suerte para él, heredó mucho de las dos." },
+  { dia: 14, tipo: "hijo", fecha_memoria: "Cuando aún te esperábamos",
+    fotos: ["fotos/dia14_2.jpg", "fotos/dia34_1.jpg"],
+    carta: "Te veías tan hermosa esperándolo, con esa panza y esa ilusión. Todavía me acuerdo de hablarle de noche sin saber cómo iba a ser su cara. Ahora no me imagino la vida sin él." },
+
+  { dia: 16, tipo: "hijo", fecha_memoria: "Días de playa",
+    fotos: ["fotos/dia16_1.jpg", "fotos/dia20_1.jpg"],
+    carta: "La arena, el agua fría, {{HIJO}} sin querer soltarte. Esos días de playa juntos son de los recuerdos que más guardo, y espero que vengan muchísimos más." },
+
+  { dia: 18, tipo: "hijo", fecha_memoria: "Fiestas en familia",
+    fotos: ["fotos/dia18_1.jpg", "fotos/dia30_2.jpg"],
+    carta: "Me gusta vernos así, rodeados de gente que queremos, con {{HIJO}} pasando de brazo en brazo. Construimos algo lindo, mi amor, y se nota en estas fotos." },
+
+  { dia: 20, tipo: "hijo", fecha_memoria: "Sus primeros días",
+    fotos: ["fotos/dia22_1.jpg", "fotos/dia22_2.jpg"],
+    carta: "Casi no dormíamos, andábamos hechos un desastre, y aun así fueron días preciosos. Verte cuidarlo con esa dulzura me hizo quererte de una forma nueva." },
+
+  { dia: 22, tipo: "hijo", fecha_memoria: "Creciendo tan rápido",
+    fotos: ["fotos/dia18_2.jpg", "fotos/dia16_2.jpg"],
+    carta: "Se nos está haciendo grande demasiado rápido. Menos mal tenemos estas fotos, y menos mal lo vivimos juntos, porque contigo hasta el tiempo que pasa se siente bien." },
+
+  { dia: 24, tipo: "hijo", fecha_memoria: "Su graduación",
+    fotos: ["fotos/dia24_1.jpg", "fotos/dia45_3.jpg"],
+    carta: "Un pasito chiquito para él, pero para nosotros fue enorme. Verte tan orgullosa ese día, con los ojos brillándote, fue mi parte favorita de toda la ceremonia." },
+
+  { dia: 26, tipo: "hijo", fecha_memoria: "Con la familia",
+    fotos: ["fotos/dia26_1.jpg", "fotos/dia28_2.jpg"],
+    carta: "Somos afortunados de tener a los nuestros cerca. Gracias por cuidar tanto esos lazos, por acordarte de todos, por mantenernos unidos como lo haces." },
+
+  { dia: 28, tipo: "hijo", fecha_memoria: "Otoño con mamá",
+    fotos: ["fotos/dia28_1.jpg", "fotos/dia03_3.jpg"],
+    carta: "Ver cómo lo llevas de la mano, cómo le enseñas cada hoja, cada puente, cada cosa nueva. Eres la mamá que yo hubiera elegido para él mil veces." },
+
+  { dia: 30, tipo: "hijo", fecha_memoria: "Su primer vuelo",
+    fotos: ["fotos/dia30_1.jpg", "fotos/dia12_1.jpg"],
+    carta: "Viajar con un niño chiquito no es fácil, y tú lo hiciste ver simple. Gracias por esa calma tuya que nos ordena a todos, incluso a treinta mil pies de altura." },
+
+  { dia: 32, tipo: "hijo", fecha_memoria: "Domingos los tres",
+    fotos: ["fotos/dia14_1.jpg", "fotos/dia12_1.jpg"],
+    carta: "Salir a comer los tres, sin apuro, con él portándose más o menos bien. Estos domingos simples son exactamente la vida que yo quería tener contigo." },
+
+  { dia: 34, tipo: "hijo", fecha_memoria: "Atardeceres los tres",
+    fotos: ["fotos/dia45_2.jpg", "fotos/dia45_1.jpg"],
+    carta: "Los tres mirando el sol bajar, sin hablar mucho, solo estando. Si tuviera que explicar qué es la felicidad para mí, mostraría una foto como esta." },
+
+  { dia: 36, tipo: "hijo", fecha_memoria: "Nuestro pequeño",
+    fotos: ["fotos/dia02_1.jpg", "fotos/dia04_2.jpg"],
+    carta: "A veces me quedo mirándolo mientras juega y no me lo creo. Hicimos eso, tú y yo. Gracias por darme la familia que siempre quise sin saber que la quería." },
+
+  { dia: 38, tipo: "hijo", fecha_memoria: "Los tres juntos",
+    fotos: ["fotos/dia16_1.jpg", "fotos/dia45_2.jpg"],
+    carta: "Éramos dos y ahora somos tres, y todo se volvió más ruidoso, más cansado y muchísimo más bonito. No lo cambiaría por nada." },
+
+  { dia: 40, tipo: "hijo", fecha_memoria: "Sus fiestas",
+    fotos: ["fotos/dia06_2.jpg", "fotos/dia08_2.jpg"],
+    carta: "Cada fiesta de {{HIJO}} lleva horas tuyas que nadie más ve. Yo sí las veo, mi amor, y te admiro muchísimo por eso." },
+
+  { dia: 42, tipo: "hijo", fecha_memoria: "Momentos en casa",
+    fotos: ["fotos/dia04_2.jpg", "fotos/dia20_2.jpg"],
+    carta: "Ustedes dos dormidos, la casa en silencio, y yo mirándolos desde la puerta pensando en lo afortunado que soy. Son mi lugar favorito del mundo." },
+
+  { dia: 44, tipo: "hijo", fecha_memoria: "Todo lo que somos",
+    fotos: ["fotos/dia10_1.jpg", "fotos/dia45_1.jpg"],
+    carta: "Mira todo lo que construimos: una casa, un hijo, una historia. Y lo mejor es que apenas vamos empezando, mi amor." },
+
+  /* ===== FAMILIA EXTENDIDA ===== */
+  { dia: 7, tipo: "familia", fecha_memoria: "Con los nuestros",
+    fotos: ["fotos/dia07_1.jpg", "fotos/dia26_1.jpg"],
+    carta: "Me encanta verte con los tuyos: cómo te ríes distinto, cómo te relajas, cómo se te nota que estás en casa. Gracias por abrirme las puertas de tu familia y hacer que también se sienta mía." },
 
   { dia: 45, tipo: "familia", fecha_memoria: "Otra vez, y qué bueno",
     fotos: ["fotos/dia45_1.jpg", "fotos/dia45_2.jpg", "fotos/dia45_3.jpg"],
-    carta: "Llevamos ya un buen tramo repitiendo esta baraja de recuerdos, y aun así cada vez que aparece uno, lo siento nuevo — porque contigo y con {{HIJO}}, hasta lo que ya vivimos se siente digno de vivirse otra vez. Gracias por esta familia que seguimos escribiendo, un día random a la vez." }
+    carta: "Ya diste toda la vuelta: cuarenta y cinco recuerdos, cuarenta y cinco cartas, y aquí seguimos. Mañana vuelve a empezar, igual que nosotros cada mañana. Y si me preguntan, yo lo volvería a vivir todo otra vez, exactamente contigo." }
 ];
 
 /* =====================================================
@@ -778,8 +781,11 @@ function mostrarRegaloDeHoy() {
   document.getElementById("final-message").textContent = conNombreHijo(cierre);
 
   const finalPhoto = document.getElementById("final-photo");
-  finalPhoto.classList.remove("loaded");
-  finalPhoto.src = recuerdoDeHoy.fotos[0];
+  finalPhoto.classList.remove("loaded", "failed");
+  // Se usa la ÚLTIMA foto del día, no la primera: así el cierre no repite
+  // la misma imagen que ella acaba de ver arriba en el carrusel.
+  // (Si el día tiene una sola foto, es la misma y no hay problema.)
+  finalPhoto.src = recuerdoDeHoy.fotos[recuerdoDeHoy.fotos.length - 1];
   finalPhoto.alt = recuerdoDeHoy.fecha_memoria;
   alCargarImagen(finalPhoto, null);
 
@@ -973,12 +979,13 @@ document.getElementById("confirm-btn").addEventListener("click", function (e) {
   lanzarLluviaDeCorazones();
 
   const { años, meses, dias } = calcularTiempoJuntos(FECHA_RELACION);
-  // Pequeña espera para que la animación arranque cuando ya está a la vista
+  // Espera a que el contador termine de entrar (su animación arranca a
+  // los 0.32s) para que los números suban cuando ya está a la vista.
   setTimeout(function () {
     animarNumero(document.getElementById("years-num"), años, 1100);
     animarNumero(document.getElementById("months-num"), meses, 1100);
     animarNumero(document.getElementById("days-num"), dias, 1100);
-  }, 380);
+  }, 620);
 
   setTimeout(function () {
     finalWrap.scrollIntoView({ behavior: "smooth", block: "start" });
