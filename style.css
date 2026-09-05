@@ -1036,6 +1036,29 @@ button {
 .mute-btn:active { transform: scale(0.92); }
 .mute-btn[hidden] { display: none; }
 
+/* Cuando el celular bloqueó la música automática, el botón se agranda
+   un poco, muestra la invitación en texto, y late suave para llamar
+   la atención sin ser molesto. */
+.mute-btn.mute-btn-blocked {
+  width: auto;
+  padding: 0 16px 0 13px;
+  gap: 7px;
+  border-radius: 999px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--wine);
+  animation: mute-btn-blocked-pulse 2s ease-in-out infinite;
+}
+.mute-btn.mute-btn-blocked::after {
+  content: "Toca para escuchar";
+  white-space: nowrap;
+}
+@keyframes mute-btn-blocked-pulse {
+  0%, 100% { box-shadow: 0 4px 14px rgba(90, 60, 50, 0.18); }
+  50%      { box-shadow: 0 4px 18px rgba(168, 41, 66, 0.38); }
+}
+
 #yt-player-slot {
   position: fixed;
   top: 0;
@@ -1379,6 +1402,7 @@ body.tema-aniversario .petal { color: var(--gold); opacity: 0.75; }
   .petal { animation: none; opacity: 0.2; }
   .heart-mark,
   .heart-halo,
+  .mute-btn-blocked,
   .seal-button { animation: none; }
   .carousel-slide { animation: none; background: var(--parchment-warm); }
   .confetti-piece { display: none; }

@@ -807,6 +807,7 @@ const muteIcon = document.getElementById("mute-icon");
 let ytPlayer = null;
 let ytPlayerListo = false;
 let reproducirEnCuantoEsteListo = false;
+let temporizadorComprobarMusica = null;
 
 function intentarReproducirCancion() {
   if (ytPlayer && ytPlayerListo && typeof ytPlayer.playVideo === "function") {
@@ -820,7 +821,19 @@ function intentarReproducirCancion() {
       ytPlayer.setVolume(VOLUMEN_MUSICA_CON_VIDEO);
     }
     ytPlayer.playVideo();
-    muteToggle.hidden = false;
+
+    // A veces el reproductor de YouTube tarda en cargar y, para cuando
+    // está listo, el toque original de ella ya "expiró" — el celular
+    // considera que reproducir en ese momento es automático y lo
+    // bloquea en silencio. Si en un segundo no confirmamos que de
+    // verdad empezó a sonar, se muestra un botón para activarla con
+    // un toque directo (eso el celular sí lo permite siempre).
+    clearTimeout(temporizadorComprobarMusica);
+    temporizadorComprobarMusica = setTimeout(function () {
+      const estado = typeof ytPlayer.getPlayerState === "function" ? ytPlayer.getPlayerState() : null;
+      const yaSuena = estado === 1 /* reproduciendo */ || estado === 3 /* cargando */;
+      if (!yaSuena) mostrarBotonMusicaBloqueada();
+    }, 1000);
   } else {
     // El reproductor aún viene en camino desde internet:
     // lo dejamos marcado para que suene apenas esté listo.
@@ -828,8 +841,36 @@ function intentarReproducirCancion() {
   }
 }
 
+function mostrarBotonMusicaSonando() {
+  clearTimeout(temporizadorComprobarMusica);
+  muteToggle.hidden = false;
+  muteToggle.classList.remove("mute-btn-blocked");
+  const silenciada = typeof ytPlayer.isMuted === "function" && ytPlayer.isMuted();
+  muteIcon.textContent = silenciada ? "🔇" : "🔊";
+  muteToggle.setAttribute("aria-label", silenciada ? "Activar música" : "Silenciar música");
+}
+
+function mostrarBotonMusicaBloqueada() {
+  muteToggle.hidden = false;
+  muteToggle.classList.add("mute-btn-blocked");
+  muteIcon.textContent = "🎵";
+  muteToggle.setAttribute("aria-label", "Toca para escuchar la canción");
+}
+
 muteToggle.addEventListener("click", function () {
   if (!ytPlayer) return;
+
+  if (muteToggle.classList.contains("mute-btn-blocked")) {
+    // Este toque sí es un gesto directo de ella: ahora el celular
+    // permite que la canción suene, sin excepción.
+    ytPlayer.playVideo();
+    setTimeout(function () {
+      const estado = typeof ytPlayer.getPlayerState === "function" ? ytPlayer.getPlayerState() : null;
+      if (estado === 1 || estado === 3) mostrarBotonMusicaSonando();
+    }, 400);
+    return;
+  }
+
   const estaSilenciado = ytPlayer.isMuted();
   if (estaSilenciado) ytPlayer.unMute();
   else ytPlayer.mute();
@@ -849,6 +890,11 @@ window.onYouTubeIframeAPIReady = function () {
       onReady: function () {
         ytPlayerListo = true;
         if (reproducirEnCuantoEsteListo) intentarReproducirCancion();
+      },
+      onStateChange: function (evento) {
+        // En cuanto confirmamos que de verdad está sonando, se quita
+        // cualquier aviso de "toca para escuchar" que hubiera quedado.
+        if (evento.data === 1 /* reproduciendo */) mostrarBotonMusicaSonando();
       }
     }
   });
@@ -1116,6 +1162,8 @@ function reiniciarRegalo() {
     if (typeof ytPlayer.seekTo === "function") ytPlayer.seekTo(0, true);
   }
   muteToggle.hidden = true;
+  muteToggle.classList.remove("mute-btn-blocked");
+  clearTimeout(temporizadorComprobarMusica);
   reproducirEnCuantoEsteListo = false;
 
   window.scrollTo({ top: 0, behavior: "smooth" });
